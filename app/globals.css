@@ -161,7 +161,7 @@
   font-size: 50px;
 }
 @utility h3{
-  font-size: 35px;
+  font-size: 25px;
 }
 
 .text-heading1{
@@ -171,5 +171,5 @@
   @apply text-4xl text-primary;
 }
 .text-heading3{
-  @apply lg:text-[24px] text-[20px] h3 text-chart-3;
+  @apply lg:text-[24px] h3 text-chart-3;
 }
