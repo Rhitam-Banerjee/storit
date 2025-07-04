@@ -156,16 +156,19 @@
 }
 @utility h1{
   font-size: 80px;
+  font-weight: 900;
 }
 @utility h2{
   font-size: 50px;
+  font-weight: 900;
 }
 @utility h3{
   font-size: 25px;
+  font-weight: 900;
 }
 
 .text-heading1{
-  @apply mb-6 font-black h1 max-lg:h2 max-sm:h3 text-primary uppercase max-lg:mb-7 max-md:mb-4 lg:leading-[84px] leading-[50px];
+  @apply mb-6 h1 max-lg:h2 max-sm:h3 text-primary uppercase max-lg:mb-7 max-md:mb-4 lg:leading-[84px] leading-[50px];
 }
 .text-heading2{
   @apply text-4xl text-primary;
