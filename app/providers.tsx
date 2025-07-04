@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
-import type { ThemeProviderProps } from "next-themes"
+
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { ImageKitProvider } from "imagekitio-next"
-import { HeroUIProvider } from "@heroui/system"
 export interface ProviderProps {
   children: React.ReactNode,
-  themeProps?: ThemeProviderProps
+  themeProps?: React.ComponentProps<typeof NextThemesProvider>
 }
 const authenticator = async () => {
   try {
@@ -18,18 +16,16 @@ const authenticator = async () => {
     throw err
   }
 }
-export function Providers({ children, themeProps }: ProviderProps) {
+export function Providers({ children, ...themeProps }: ProviderProps) {
   return (
-    <h1>
-      <ImageKitProvider
-        authenticator={authenticator}
-        publicKey={process.env.IMAGEKIT_PUBLIC_KEY || ""}
-        urlEndpoint={process.env.IMAGEKIT_URL_ENDPOINT || ""}
-      >
-        <HeroUIProvider>
-          {children}
-        </HeroUIProvider>
-      </ImageKitProvider>
-    </h1>
+    <ImageKitProvider
+      authenticator={authenticator}
+      publicKey={process.env.IMAGEKIT_PUBLIC_KEY || ""}
+      urlEndpoint={process.env.IMAGEKIT_URL_ENDPOINT || ""}
+    >
+      <NextThemesProvider {...themeProps} attribute="class" defaultTheme="light" enableSystem>
+        {children}
+      </NextThemesProvider>
+    </ImageKitProvider>
   )
 }
