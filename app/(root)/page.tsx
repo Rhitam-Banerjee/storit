@@ -24,7 +24,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="mt-[100px] sticky top-[20px] left-1/2 -translate-x-1/2 w-max h-max bg-secondary px-12 py-3 rounded-4xl">
+      <div className="mt-[100px] mx-auto px-12 py-3 sticky top-[20px] w-full max-w-[400px] h-max bg-secondary rounded-4xl">
         <SecondaryNav />
       </div>
       <div className="w-[100dvw] h-[100dvh]"></div>

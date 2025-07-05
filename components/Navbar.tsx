@@ -16,7 +16,7 @@ import { navLinks } from "@/constants/navLinks";
 export default function Navbar() {
   const { isSignedIn, user, isLoaded } = useUser()
   return (
-    <header className="w-full max-w-[1440px] h-max max-sm:px-8 max-sm:py-4 z-50">
+    <header className="w-full max-w-[1440px] h-max z-50">
       <nav className="flex flex-row items-center justify-between">
         <Link href={"/"} className="flex flex-row justify-start items-center gap-[10px]">
           <PiCloudArrowUpDuotone className="text-2xl" />
