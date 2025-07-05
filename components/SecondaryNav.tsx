@@ -34,7 +34,7 @@ export default function SecondaryNav() {
           return (
             <div
               ref={el => { linkRef.current[index] = el; }}
-              className="font-bold px-[20px] py-[5px] cursor-pointer"
+              className="font-bold max-xs:small-text max-xs:px-[10px] px-[20px] py-[5px] cursor-pointer"
               key={index}
               onClick={() => {
                 handleClick(index)
