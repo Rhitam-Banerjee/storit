@@ -8,7 +8,7 @@ export default function UserLayout({
   return (
     <main className="max-w-[1440px] m-auto px-16 py-3 max-sm:px-8 max-sm:py-4">
       <Navbar />
-      <section className="mt-[100px]">
+      <section className="">
         {children}
       </section>
     </main>

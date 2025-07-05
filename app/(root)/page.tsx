@@ -1,26 +1,33 @@
+import SecondaryNav from "@/components/SecondaryNav";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="pt-[100px] relative flex flex-row max-lg:flex-col justify-center items-center">
-      <div className="flex flex-col justify-center lg:items-start items-center lg:text-start text-center">
-        <h3 className="text-heading3">Store &amp; Share</h3>
-        <h1 className="text-heading1">Amaizingly Simple</h1>
-        <p className="mt-[10px]">We have designed StorIt to be easy to use, quick to access &amp;<br />  better authentication.</p>
-        <Link href="/sign-up" ><Button className="mt-[30px] text-[20px] max-sm:text-[15px] font-bold px-8 py-6 max-sm:px-4 max-sm:py-3 bg-chart-3 text-secondary dark:text-primary delay-100 hover:bg-chart-3" type="button" variant="default">Try Demo</Button></Link>
+    <main className="pt-[100px] relative">
+      <div className="flex flex-row max-lg:flex-col justify-center items-center">
+        <div className="flex flex-col justify-center lg:items-start items-center lg:text-start text-center">
+          <h3 className="text-heading3">Store &amp; Share</h3>
+          <h1 className="text-heading1">Amaizingly Simple</h1>
+          <p className="mt-[10px]">We have designed StorIt to be easy to use, quick to access &amp;<br />  better authentication.</p>
+          <Link href="/sign-up" ><Button className="mt-[30px] px-8 py-6 max-sm:px-4 max-sm:py-3 font-bold text-[20px] max-sm:text-[15px] text-secondary dark:text-primary bg-chart-3 hover:bg-chart-3/80 rounded-3xl" type="button" variant="default">Try Demo</Button></Link>
+        </div>
+        <div className="max-lg:mt-[50px]">
+          <Image
+            className="w-full max-w-[600px] max-lg:max-w-[300px]"
+            src="/hero.png"
+            alt="StorIt logo"
+            width={1230}
+            height={1230}
+            priority
+          />
+        </div>
       </div>
-      <div className="max-lg:mt-[50px] rotate-y-180">
-        <Image
-          className="w-full max-w-[600px] max-lg:max-w-[300px]"
-          src="/cloudServer.png"
-          alt="StorIt logo"
-          width={1230}
-          height={1230}
-          priority
-        />
+      <div className="mt-[100px] sticky top-[20px] left-1/2 -translate-x-1/2 w-max h-max bg-secondary px-12 py-3 rounded-4xl">
+        <SecondaryNav />
       </div>
+      <div className="w-[100dvw] h-[100dvh]"></div>
     </main>
   );
 }
