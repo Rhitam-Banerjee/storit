@@ -29,7 +29,7 @@ export default function SecondaryNav() {
   }
   return (
     <section className="w-full z-10">
-      <div className="w-full relative lg:flex hidden flex-row justify-between items-center z-20">
+      <div className="w-full relative flex flex-row justify-between items-center z-20">
         {navLinks.map((link, index) => {
           return (
             <div

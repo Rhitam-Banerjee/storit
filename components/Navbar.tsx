@@ -23,7 +23,7 @@ export default function Navbar() {
           <span className="text-2xl font-semibold">StorIt</span>
         </Link>
         <div className="flex flex-row justify-end items-center gap-[10px]">
-          <div className="sm:flex hidden flex-row justify-end items-center gap-[10px]">
+          <div className="flex flex-row justify-end items-center gap-[10px]">
             {!isSignedIn && (
               <>
                 <Link href={"/sign-in"}><Button variant="secondary">Login In</Button></Link>
