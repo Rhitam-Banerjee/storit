@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import Link from "next/link"
 // hooks
 import { useState } from "react"
@@ -14,7 +11,10 @@ import { z } from "zod"
 import { useSignIn } from "@clerk/nextjs"
 import { signInSchema } from "@/schemas/signInSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-// form components
+// components
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Form,
   FormControl,

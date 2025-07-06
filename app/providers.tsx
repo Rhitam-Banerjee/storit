@@ -1,5 +1,4 @@
 "use client"
-
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { ImageKitProvider } from "imagekitio-next"
 export interface ProviderProps {
