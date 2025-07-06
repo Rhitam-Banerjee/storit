@@ -1,11 +1,15 @@
+// components
 import { LoginForm } from "@/components/login-form"
-import Image from "next/image"
-import { PiCloudArrowUpDuotone } from "react-icons/pi"
-import Link from "next/link"
 import { ThemeToggle } from "@/components/ThemeToggle"
-// import SignInFrom from "@/components/SignIn"
+// assets
+import { PiCloudArrowUpDuotone } from "react-icons/pi"
+
+import Image from "next/image"
+import Link from "next/link"
 
 export default function LoginPage() {
+  // const router = useRouter()
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="bg-muted relative hidden lg:block">
@@ -34,6 +38,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-    // <SignInFrom />
   )
 }

@@ -18,9 +18,13 @@ import {
 import { useUser } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-
+import { useClerk } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const { signOut } = useClerk()
   const { isSignedIn, user, isLoaded } = useUser()
   return (
     <header className="w-full max-w-[1440px] h-max z-50">
@@ -31,10 +35,21 @@ export default function Navbar() {
         </Link>
         <div className="flex flex-row justify-end items-center gap-[10px]">
           <div className="flex max-xs:hidden flex-row justify-end items-center gap-[10px]">
-            {!isSignedIn && (
+            {!isSignedIn ? (
               <>
-                <Link href={"/sign-in"}><Button variant="secondary">Login In</Button></Link>
                 <Link href={"/sign-up"}><Button variant="outline">Sign Up</Button></Link>
+                <Link href={"/sign-in"}><Button variant="secondary">Login In</Button></Link>
+              </>
+            ) : (
+              <>
+                {pathname !== "/dashboard" && <Link href={"/dashboard"}><Button variant="ghost">Dashboard</Button></Link>}
+                <Button variant="outline" onClick={() => {
+                  signOut(() => {
+                    console.log("Logout");
+
+                    router.push("/");
+                  });
+                }}>Logout</Button>
               </>
             )}
           </div>
