@@ -26,6 +26,13 @@ export default function Navbar() {
   const pathname = usePathname()
   const { signOut } = useClerk()
   const { isSignedIn, user, isLoaded } = useUser()
+  const loggedUser = user ? {
+    id: user.id,
+    username: user.username,
+    imageurl: user.imageUrl,
+    emailAddress: user.emailAddresses?.[0].emailAddress
+  } : null
+
   return (
     <header className="w-full max-w-[1440px] h-max z-50">
       <nav className="flex flex-row items-center justify-between">
@@ -43,30 +50,72 @@ export default function Navbar() {
             ) : (
               <>
                 {pathname !== "/dashboard" && <Link href={"/dashboard"}><Button variant="ghost">Dashboard</Button></Link>}
-                <Button variant="outline" onClick={() => {
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex flex-row justify-start items-center gap-[10px] p-[3px] border text-sm font-medium rounded-md shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
+                    <div className="rounded-full bg-secondary w-[30px] h-[30px] grid place-items-center shadow-sm border font-black uppercase text-[10px]">{loggedUser?.username?.slice(0, 2)}</div>
+                    <div className="flex max-sm:hidden">{`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel className="flex flex-col justify-center items-start gap-[10px]">
+                      <div>Hello! {loggedUser?.username}</div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>
+                      <div className="max-sm:flex hidden">Email: {`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => {
+                      signOut(() => {
+                        console.log("Logout");
+
+                        router.push("/");
+                      });
+                    }}>Logout</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                {/* <Button variant="outline" onClick={() => {
                   signOut(() => {
                     console.log("Logout");
 
                     router.push("/");
                   });
-                }}>Logout</Button>
+                }}>Logout</Button> */}
               </>
             )}
           </div>
-          <ThemeToggle />
-          <div className="max-xs:block hidden">
+          <div className="max-xs:flex flex-row items-center hidden">
             <DropdownMenu>
-              <DropdownMenuTrigger className="border p-[10px] text-sm font-medium rounded-md shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
-                <PiHamburgerDuotone />
+              <DropdownMenuTrigger className="border text-sm font-medium rounded-md shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
+                {isSignedIn
+                  ?
+                  <div className="rounded-full bg-secondary p-[3px] w-[30px] h-[30px] grid place-items-center shadow-sm border font-black uppercase text-[10px]">
+                    {loggedUser?.username?.slice(0, 2)}
+                  </div>
+                  :
+                  <PiHamburgerDuotone className="w-[36px] h-[36px] p-[10px]" />
+                }
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {isSignedIn ?
                   <>
-                    <DropdownMenuLabel>
-                      <Link href={"/dashboard"}>My Account</Link>
+                    <DropdownMenuLabel className="flex flex-row justify-start items-center gap-[10px]">
+                      <div>Hello! {loggedUser?.username}</div>
                     </DropdownMenuLabel>
+                    <DropdownMenuItem>
+                      <div className="">Email: {`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    {pathname !== "/dashboard" && <DropdownMenuItem>
+                      <Link className="w-full" href="/dashboard">
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>}
+                    <DropdownMenuItem onClick={() => {
+                      signOut(() => {
+                        console.log("Logout");
+
+                        router.push("/");
+                      });
+                    }}>Logout</DropdownMenuItem>
                   </>
                   :
                   <>
@@ -81,6 +130,7 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
     </header>

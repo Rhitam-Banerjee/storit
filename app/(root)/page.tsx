@@ -10,7 +10,7 @@ export default function Home() {
         <div className="flex flex-col justify-center lg:items-start items-center lg:text-start text-center">
           <h3 className="text-heading3">Store &amp; Share</h3>
           <h1 className="text-heading1">Amaizingly Simple</h1>
-          <p className="mt-[10px]">We have designed StorIt to be easy to use, quick to access &amp;<br />  better authentication.</p>
+          <p className="mt-[10px] text-heading4">We have designed StorIt to be easy to use, quick to access &amp;<br />  better authentication.</p>
           <Link href="/sign-up" ><Button className="mt-[30px] px-8 py-6 max-sm:px-4 max-sm:py-3 font-bold text-[20px] max-sm:text-[15px] text-secondary dark:text-primary bg-chart-3 hover:bg-chart-3/80 rounded-3xl" type="button" variant="default">Try Demo</Button></Link>
         </div>
         <div className="max-lg:mt-[50px]">

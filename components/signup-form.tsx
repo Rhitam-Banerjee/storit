@@ -57,6 +57,7 @@ export function SignUpForm({
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -71,6 +72,7 @@ export function SignUpForm({
 
     try {
       await signUp.create({
+        username: data.username,
         emailAddress: data.email,
         password: data.password,
       });
@@ -160,6 +162,7 @@ export function SignUpForm({
           }}>
             Verify
           </Button>
+          <div id="clerk-captcha"></div>
         </CardFooter>
       </Card>
     )
@@ -173,6 +176,21 @@ export function SignUpForm({
         {authError && <p className="text-muted-foreground">{authError}</p>}
         {verificationError && <p className="text-muted-foreground">{verificationError}</p>}
         <div className="grid gap-6">
+          <div className="grid gap-3">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="email">Username</FormLabel>
+                  <FormControl>
+                    <Input id="username" type="text" className="bg-secondary" placeholder="your username" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="grid gap-3">
             <FormField
               control={form.control}

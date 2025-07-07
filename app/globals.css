@@ -130,20 +130,25 @@
   font-weight: 900;
 }
 @utility h3{
-  font-size: 25px;
+  font-size: 35px;
   font-weight: 900;
 }
+@utility h4{
+  font-size:20px;
+}
 @utility small-text {
-  font-size:12px;
-  font-weight:700;
+  font-size:15px;
 }
 
 .text-heading1{
-  @apply mb-6 h1 max-lg:h2 max-sm:h3 text-primary uppercase max-lg:mb-7 max-md:mb-4 lg:leading-[84px] leading-[50px];
+  @apply mb-6 h1 max-lg:h2 max-sm:h2 max-xs:h3 text-primary uppercase max-lg:mb-7 max-md:mb-4 lg:leading-[84px] leading-[50px];
 }
 .text-heading2{
   @apply text-4xl text-primary;
 }
 .text-heading3{
-  @apply lg:text-[24px] h3 text-chart-3;
+  @apply h3 max-xs:h4 text-chart-3;
+}
+.text-heading4{
+  @apply h4 max-xs:small-text;
 }
