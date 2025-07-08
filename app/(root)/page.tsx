@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="pt-[100px] relative">
+    <main className="max-w-[1440px] m-auto px-16 py-3 max-sm:px-8 max-sm:py-4 pt-[100px] relative">
       <div className="flex flex-row max-lg:flex-col justify-center items-center">
         <div className="flex flex-col justify-center lg:items-start items-center lg:text-start text-center">
           <h3 className="text-heading3">Store &amp; Share</h3>

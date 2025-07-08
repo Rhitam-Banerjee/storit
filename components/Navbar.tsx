@@ -34,7 +34,7 @@ export default function Navbar() {
   } : null
 
   return (
-    <header className="w-full max-w-[1440px] h-max z-50">
+    <header className="px-16 py-3 max-sm:px-8 max-sm:py-4 w-full max-w-[1440px] h-max z-50">
       <nav className="flex flex-row items-center justify-between">
         <Link href={"/"} className="flex flex-row justify-start items-center gap-[10px]">
           <PiCloudArrowUpDuotone className="text-2xl" />
@@ -56,12 +56,8 @@ export default function Navbar() {
                     <div className="flex max-sm:hidden">{`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuLabel className="flex flex-col justify-center items-start gap-[10px]">
-                      <div>Hello! {loggedUser?.username}</div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>
-                      <div className="max-sm:flex hidden">Email: {`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
+                    <DropdownMenuLabel className="max-sm:flex hidden">
+                      <div >Email: {`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
                     </DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => {
                       signOut(() => {
@@ -72,13 +68,6 @@ export default function Navbar() {
                     }}>Logout</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* <Button variant="outline" onClick={() => {
-                  signOut(() => {
-                    console.log("Logout");
-
-                    router.push("/");
-                  });
-                }}>Logout</Button> */}
               </>
             )}
           </div>
@@ -97,9 +86,6 @@ export default function Navbar() {
               <DropdownMenuContent>
                 {isSignedIn ?
                   <>
-                    <DropdownMenuLabel className="flex flex-row justify-start items-center gap-[10px]">
-                      <div>Hello! {loggedUser?.username}</div>
-                    </DropdownMenuLabel>
                     <DropdownMenuItem>
                       <div className="">Email: {`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
                     </DropdownMenuItem>
