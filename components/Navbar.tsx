@@ -34,7 +34,7 @@ export default function Navbar() {
   } : null
 
   return (
-    <header className="px-16 py-3 max-sm:px-8 max-sm:py-4 w-full max-w-[1440px] h-max z-50">
+    <header className="px-16 py-3 max-sm:px-8 max-sm:py-4 w-full max-w-[1440px] mx-auto h-max z-50">
       <nav className="flex flex-row items-center justify-between">
         <Link href={"/"} className="flex flex-row justify-start items-center gap-[10px]">
           <PiCloudArrowUpDuotone className="text-2xl" />
