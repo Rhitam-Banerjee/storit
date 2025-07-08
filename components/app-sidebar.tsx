@@ -8,7 +8,7 @@ import {
 
 export function AppSidebar() {
   return (
-    <Sidebar variant="floating">
+    <Sidebar>
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup />

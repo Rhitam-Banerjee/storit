@@ -1,12 +1,15 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { cookies } from "next/headers"
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
   return (
-    <SidebarProvider>
+    <SidebarProvider className="w-full" defaultOpen={defaultOpen}>
       <AppSidebar />
-      <SidebarTrigger className="-mt-[45px]" />
-      <section className="px-10 py-3 max-sm:px-1 max-sm:py-4">
+      <SidebarTrigger className="-mt-[45px] max-sm:-mt-[50px]" />
+      <section className="w-full max-w-[1440px] mx-auto px-16 pl-9 py-3 max-sm:px-8 max-sm:pl-1 max-sm:py-4">
         {children}
       </section>
     </SidebarProvider>
