@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter()
@@ -30,7 +31,7 @@ export default function Navbar() {
     id: user.id,
     username: user.username,
     imageurl: user.imageUrl,
-    emailAddress: user.emailAddresses?.[0].emailAddress
+    emailAddress: user.emailAddresses?.[0].emailAddress,
   } : null
 
   return (
@@ -52,7 +53,7 @@ export default function Navbar() {
                 {pathname !== "/dashboard" && <Link href={"/dashboard"}><Button variant="ghost">Dashboard</Button></Link>}
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex flex-row justify-start items-center gap-[10px] p-[3px] border text-sm font-medium rounded-md shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
-                    <div className="rounded-full bg-secondary w-[30px] h-[30px] grid place-items-center shadow-sm border font-black uppercase text-[10px]">{loggedUser?.username?.slice(0, 2)}</div>
+                    <Image src={loggedUser?.imageurl || ""} alt="Profile Photo" width={100} height={100} className="rounded-full shadow-sm w-[30px] h-[30px]" />
                     <div className="flex max-sm:hidden">{`${loggedUser?.emailAddress.slice(0, 20)}` + `${loggedUser?.emailAddress.slice(0, 20) === loggedUser?.emailAddress ? "" : "..."}`}</div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
