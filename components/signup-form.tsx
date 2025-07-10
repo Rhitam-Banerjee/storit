@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
-import Link from "next/link"
-import z from "zod"
-import { signUpSchema } from "@/schemas/signUpSchema"
+"use client";
+import Link from "next/link";
+import z from "zod";
+import { signUpSchema } from "@/schemas/signUpSchema";
 // hooks
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useSignUp } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useSignUp } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 // components
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -29,12 +29,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
+} from "@/components/ui/input-otp";
 // assets
 import { PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
 
@@ -83,7 +83,7 @@ export function SignUpForm({
       console.error("Sign-up error:", error);
       setAuthError(
         error.errors?.[0]?.message ||
-        "An error occurred during sign-up. Please try again."
+          "An error occurred during sign-up. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -117,7 +117,7 @@ export function SignUpForm({
       console.error("Verification error:", error);
       setVerificationError(
         error.errors?.[0]?.message ||
-        "An error occurred during verification. Please try again."
+          "An error occurred during verification. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -128,9 +128,7 @@ export function SignUpForm({
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Enter The OTP</CardTitle>
-          <CardDescription>
-            OTP was sent to your sign-up mailID
-          </CardDescription>
+          <CardDescription>OTP was sent to your sign-up mailID</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleVerificationSubmit}>
@@ -153,28 +151,38 @@ export function SignUpForm({
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" onClick={async () => {
-            if (signUp) {
-              await signUp.prepareEmailAddressVerification({
-                strategy: "email_code",
-              });
-            }
-          }}>
+          <Button
+            type="submit"
+            className="w-full"
+            onClick={async () => {
+              if (signUp) {
+                await signUp.prepareEmailAddressVerification({
+                  strategy: "email_code",
+                });
+              }
+            }}
+          >
             Verify
           </Button>
           <div id="clerk-captcha"></div>
         </CardFooter>
       </Card>
-    )
+    );
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col gap-6", className)} {...props}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-6", className)}
+        {...props}
+      >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Create an account</h1>
         </div>
         {authError && <p className="text-muted-foreground">{authError}</p>}
-        {verificationError && <p className="text-muted-foreground">{verificationError}</p>}
+        {verificationError && (
+          <p className="text-muted-foreground">{verificationError}</p>
+        )}
         <div className="grid gap-6">
           <div className="grid gap-3">
             <FormField
@@ -184,7 +192,14 @@ export function SignUpForm({
                 <FormItem>
                   <FormLabel htmlFor="email">Username</FormLabel>
                   <FormControl>
-                    <Input id="username" type="text" className="bg-secondary" placeholder="your username" required {...field} />
+                    <Input
+                      id="username"
+                      type="text"
+                      className="bg-secondary"
+                      placeholder="your username"
+                      required
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -199,7 +214,14 @@ export function SignUpForm({
                 <FormItem>
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <FormControl>
-                    <Input id="email" type="email" className="bg-secondary" placeholder="something@example.com" required {...field} />
+                    <Input
+                      id="email"
+                      type="email"
+                      className="bg-secondary"
+                      placeholder="something@example.com"
+                      required
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,44 +229,79 @@ export function SignUpForm({
             />
           </div>
           <div className="grid gap-3">
-            <FormField control={form.control}
+            <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="flex justify-between items-center">
-                    <Label htmlFor="password">Password</Label>
+                  <FormLabel
+                    htmlFor="password"
+                    className="flex justify-between items-center"
+                  >
+                    Password
                   </FormLabel>
                   <div className="flex items-center gap-[10px]">
                     <FormControl>
-                      <Input id="password" type={showPassword ? "text" : "password"} className="bg-secondary" placeholder="your password" required {...field} />
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        className="bg-secondary"
+                        placeholder="your password"
+                        required
+                        {...field}
+                      />
                     </FormControl>
-                    <Button type="button" variant="outline" onClick={() => setShowPassword(!showPassword)}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
                       {showPassword ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
                     </Button>
                   </div>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
           </div>
           <div className="grid gap-3">
-            <FormField control={form.control}
+            <FormField
+              control={form.control}
               name="passwordConfirmation"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center">
-                    <Label htmlFor="passwordConfirmation">Confirm Password</Label>
+                    Confirm Password
                   </FormLabel>
                   <div className="flex items-center gap-[10px]">
                     <FormControl>
-                      <Input id="passwordConfirmation" type={showConfirmPassword ? "text" : "password"} className="bg-secondary" placeholder="confirm your password" required {...field} />
+                      <Input
+                        id="passwordConfirmation"
+                        type={showConfirmPassword ? "text" : "password"}
+                        className="bg-secondary"
+                        placeholder="confirm your password"
+                        required
+                        {...field}
+                      />
                     </FormControl>
-                    <Button type="button" variant="outline" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                      {showConfirmPassword ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <PiEyeDuotone />
+                      ) : (
+                        <PiEyeClosedDuotone />
+                      )}
                     </Button>
                   </div>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
           </div>
           <Button type="submit" className="w-full">
             {isSubmitting ? "Verifying..." : "Sign up"}
@@ -272,5 +329,5 @@ export function SignUpForm({
         </div>
       </form>
     </Form>
-  )
+  );
 }

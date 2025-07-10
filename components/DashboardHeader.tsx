@@ -39,10 +39,8 @@ export default function DashboardHeader() {
       </span>
       <FileUpload />
       <Dialog onOpenChange={() => setNewFolderName("")}>
-        <DialogTrigger className="w-full">
-          <Button className="w-full mt-[10px] max-w-[300px] mx-auto bg-primary hover:bg-primary/50">
-            Create New Folder
-          </Button>
+        <DialogTrigger className="w-full -9 px-4 py-2 mt-[10px] max-w-[300px] mx-auto bg-primary hover:bg-primary/50 rounded-md text-sm text-secondary font-medium transition-all">
+          Create New Folder
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
+"use client";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 // hooks
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 // validators
-import { z } from "zod"
-import { useSignIn } from "@clerk/nextjs"
-import { signInSchema } from "@/schemas/signInSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod";
+import { useSignIn } from "@clerk/nextjs";
+import { signInSchema } from "@/schemas/signInSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 // components
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -22,53 +22,56 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [authError, setAuthError] = useState<string | null>(null)
-  const { signIn, isLoaded, setActive } = useSignIn()
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const { signIn, isLoaded, setActive } = useSignIn();
   const form = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
-      password: ""
-    }
-  })
+      password: "",
+    },
+  });
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-    if (!isLoaded) return
-    setIsSubmitting(true)
-    setAuthError(null)
+    if (!isLoaded) return;
+    setIsSubmitting(true);
+    setAuthError(null);
     try {
       const results = await signIn.create({
         identifier: data.email,
-        password: data.password
-      })
+        password: data.password,
+      });
       if (results.status === "complete") {
-        await setActive({ session: results.createdSessionId })
-        router.push("/dashboard")
+        await setActive({ session: results.createdSessionId });
+        router.push("/dashboard");
       } else {
         console.log("Sign In incomplete");
-        setAuthError("Sign in could not be completed dute to some error")
+        setAuthError("Sign in could not be completed dute to some error");
       }
     } catch (error: any) {
       console.error("Sign-in error:", error);
       setAuthError(
         error.errors?.[0]?.message ||
-        "An error occurred during sign-in. Please try again."
+          "An error occurred during sign-in. Please try again."
       );
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("flex flex-col gap-6", className)} {...props}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-6", className)}
+        {...props}
+      >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
           <p className="text-muted-foreground text-sm">
@@ -78,25 +81,37 @@ export function LoginForm({
         {authError && <p className="text-muted-foreground">{authError}</p>}
         <div className="grid gap-6">
           <div className="grid gap-3">
-            <FormField control={form.control}
+            <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <FormControl>
-                    <Input id="email" type="email" className="bg-secondary" placeholder="something@example.com" required {...field} />
+                    <Input
+                      id="email"
+                      type="email"
+                      className="bg-secondary"
+                      placeholder="something@example.com"
+                      required
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
           </div>
           <div className="grid gap-3">
-            <FormField control={form.control}
+            <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="font-bold">
+                      Password
+                    </Label>
                     <a
                       href="#"
                       className="ml-auto text-sm underline-offset-4 hover:underline"
@@ -105,29 +120,23 @@ export function LoginForm({
                     </a>
                   </FormLabel>
                   <FormControl>
-                    <Input id="password" type="password" className="bg-secondary" placeholder="your password" required {...field} />
+                    <Input
+                      id="password"
+                      type="password"
+                      className="bg-secondary"
+                      placeholder="your password"
+                      required
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )} />
+              )}
+            />
           </div>
           <Button type="submit" className="w-full">
             {isSubmitting ? "Logging in..." : "Login"}
           </Button>
-          {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-            <span className="bg-background text-muted-foreground relative z-10 px-2">
-              Or continue with
-            </span>
-          </div>
-          <Button variant="outline" className="w-full">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path
-                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                fill="currentColor"
-              />
-            </svg>
-            Login with GitHub
-          </Button> */}
         </div>
         <div className="text-center text-sm">
           Don&apos;t have an account?{" "}
@@ -137,5 +146,5 @@ export function LoginForm({
         </div>
       </form>
     </Form>
-  )
+  );
 }
