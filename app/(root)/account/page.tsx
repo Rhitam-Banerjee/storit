@@ -23,7 +23,7 @@ export default function DashboardAccount() {
   }
   return (
     <section className="w-full h-full min-h-[calc(100dvh-61px)] max-w-[1440px] mx-auto px-16 py-3 max-sm:px-8 max-sm:py-4 grid place-items-center">
-      <div className="bg-secondary w-full h-full max-w-[600px] max-h-[600px] p-10 pl-5 rounded-md shadow-md gap-[20px]">
+      <div className="bg-secondary w-full h-max max-w-[500px] p-5 rounded-md shadow-md gap-[20px]">
         <div className="w-full">
           <div className="w-max ml-auto">
             <Button
