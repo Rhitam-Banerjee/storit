@@ -15,6 +15,17 @@ interface ComponentProps {
   files: DashboardTableFileContents[];
 }
 export default function TableDemo({ files }: ComponentProps) {
+  const openImageViewer = (file: DashboardTableFileContents) => {
+    if (file.type.startsWith("image/")) {
+      const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-90,w-1600,fo-auto/${file.path}`;
+      window.open(optimizedUrl, "_blank");
+    }
+  };
+  const handleItemClick = (file: DashboardTableFileContents) => {
+    if (file.type.startsWith("image/")) {
+      openImageViewer(file);
+    }
+  };
   const getDateTime = (typeOutput = "date", value: string) => {
     const currentDate = new Date(value);
     if (typeOutput === "date") {
@@ -43,7 +54,7 @@ export default function TableDemo({ files }: ComponentProps) {
       </TableHeader>
       <TableBody>
         {files.map((file, index) => (
-          <TableRow key={index}>
+          <TableRow key={index} onClick={() => handleItemClick(file)}>
             <TableCell
               className={`${
                 file.type === "folder" ? "h-[93px]" : ""
