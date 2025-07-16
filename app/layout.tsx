@@ -25,10 +25,8 @@ export default function RootLayout({
         <body
           className={`${montserrat.className} antialiased overflow-x-hidden`}
         >
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
+          <Providers>{children}</Providers>
+          <Toaster closeButton />
         </body>
       </html>
     </ClerkProvider>

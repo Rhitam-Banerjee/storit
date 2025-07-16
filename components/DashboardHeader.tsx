@@ -12,11 +12,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { Input } from "./ui/input";
-export default function DashboardHeader() {
-  const { isSignedIn, user, isLoaded } = useUser();
+import { useRef, useState } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+
+interface FileUploadChanges {
+  userId: string;
+  currentFolder: string | null;
+  handleCreateFolder: () => void;
+  handleUpload: () => void;
+}
+export default function DashboardHeader({
+  userId,
+  currentFolder,
+  handleCreateFolder,
+  handleUpload,
+}: FileUploadChanges) {
+  const { user, isLoaded } = useUser();
   const [newFolderName, setNewFolderName] = useState<string>("");
+
   const loggedUser = user
     ? {
         id: user.id,
@@ -25,10 +40,11 @@ export default function DashboardHeader() {
         emailAddress: user.emailAddresses?.[0].emailAddress,
       }
     : null;
+  const handleFileUploadSuccess = () => {};
   if (!isLoaded) {
     return <h1>Loading...</h1>;
   }
-  const handleCreateFolder = () => {};
+
   return (
     <section className="w-full flex flex-col justify-center items-start p-4 rounded-md">
       <h1 className="w-full text-heading4 text-chart-3 font-bold capitalize">
@@ -37,7 +53,12 @@ export default function DashboardHeader() {
       <span className="text-small-text">
         Upload your files, folders and assets with ease
       </span>
-      <FileUpload />
+      <FileUpload
+        userId={userId}
+        currentFolder={currentFolder}
+        onUploadSuccess={handleFileUploadSuccess}
+        handleUpload={handleUpload}
+      />
       <Dialog onOpenChange={() => setNewFolderName("")}>
         <DialogTrigger className="w-full -9 px-4 py-2 mt-[10px] max-w-[300px] mx-auto bg-primary hover:bg-primary/50 rounded-md text-sm text-secondary font-medium transition-all">
           Create New Folder

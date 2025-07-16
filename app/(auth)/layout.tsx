@@ -25,19 +25,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    // <ClerkProvider>
-    //   <html lang="en" suppressHydrationWarning>
-    //     <body
-    //       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    //     >
-    //       <Providers>
-    //       </Providers>
-    //     </body>
-    //   </html>
-    // </ClerkProvider>
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

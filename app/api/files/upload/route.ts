@@ -1,43 +1,52 @@
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { eq, and } from "drizzle-orm";
-import { v4 as uuidv4 } from "uuid"
-
 import { db } from "@/lib/db";
 import { files } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
+import ImageKit from "imagekit";
+import { v4 as uuidv4 } from "uuid";
 
-import ImageKit from "imagekit"
-import { NextRequest, NextResponse } from "next/server";
-
+// Initialize ImageKit with your credentials
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY || "",
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "",
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT || ""
 })
-export async function POST(req: NextRequest) {
-  try {
-    const { userId } = await auth()
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorised USER" }, { status: 401 })
-    }
-    const formData = await req.formData()
-    const file = formData.get("file") as File
-    const formUserId = formData.get("userId") as string
-    const parentId = formData.get("parentId") as string || null
 
+export async function POST(request: NextRequest) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+    const formUserId = formData.get("userId") as string;
+    const parentId = (formData.get("parentId") as string) || null;
+
+    // Verify the user is uploading to their own account
     if (formUserId !== userId) {
-      return NextResponse.json({ error: "Unauthorised USER" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     if (!file) {
-      return NextResponse.json({ error: "Filer Not provided" }, { status: 401 })
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
+
+    // Check if parent folder exists if parentId is provided
     if (parentId) {
-      const [parentFolder] = await db.select().from(files).where(
-        and(
-          eq(files.userId, userId),
-          eq(files.id, parentId),
-          eq(files.isFolder, true)
-        )
-      )
+      const [parentFolder] = await db
+        .select()
+        .from(files)
+        .where(
+          and(
+            eq(files.id, parentId),
+            eq(files.userId, userId),
+            eq(files.isFolder, true)
+          )
+        );
+
       if (!parentFolder) {
         return NextResponse.json(
           { error: "Parent folder not found" },
@@ -45,29 +54,38 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-    if (!parentId) {
-      return NextResponse.json({ error: "Parent folder not found" }, { status: 401 })
+
+    // Only allow image uploads
+    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
+      return NextResponse.json(
+        { error: "Only image files are supported" },
+        { status: 400 }
+      );
     }
-    if (!file.type.startsWith("image/") && file.type !== "application/pdf" && file.type !== "application/doc") {
-      return NextResponse.json({ error: "File type not suppourted" }, { status: 401 })
-    }
-    const buffer = await file.arrayBuffer()
-    const fileBuffer = Buffer.from(buffer)
 
-    const folderPath = parentId ? `/storit/${userId}/folder/${parentId}` : `/storit/${userId}/`
+    const buffer = await file.arrayBuffer();
+    const fileBuffer = Buffer.from(buffer);
 
-    const originalFileName = file.name
-    const fileExtension = originalFileName.split(".").pop()
-    const uniqueFileName = `${uuidv4()}.${fileExtension}`
+    const originalFilename = file.name;
+    const fileExtension = originalFilename.split(".").pop() || "";
+    const uniqueFilename = `${uuidv4()}.${fileExtension}`;
 
+    // Create folder path based on parent folder if exists
+    const folderPath = parentId
+      ? `/storIt/${userId}/folders/${parentId}`
+      : `/storIt/${userId}`;
+    console.log("Running imagekit");
+    
     const uploadResponse = await imagekit.upload({
       file: fileBuffer,
-      fileName: uniqueFileName,
+      fileName: uniqueFilename,
       folder: folderPath,
-      useUniqueFileName: false
-    })
+      useUniqueFileName: false,
+    });
+    console.log("Running failed imagekit");
+
     const fileData = {
-      name: originalFileName,
+      name: originalFilename,
       path: uploadResponse.filePath,
       size: file.size,
       type: file.type,
@@ -79,6 +97,7 @@ export async function POST(req: NextRequest) {
       isStarred: false,
       isTrash: false,
     };
+
     const [newFile] = await db.insert(files).values(fileData).returning();
 
     return NextResponse.json(newFile);
