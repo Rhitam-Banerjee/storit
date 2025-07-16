@@ -147,24 +147,12 @@ export function SignUpForm({
                 </InputOTPGroup>
               </InputOTP>
             </div>
+            <Button type="submit" className="mt-[30px] w-full">
+              Verify
+            </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button
-            type="submit"
-            className="w-full"
-            onClick={async () => {
-              if (signUp) {
-                await signUp.prepareEmailAddressVerification({
-                  strategy: "email_code",
-                });
-              }
-            }}
-          >
-            Verify
-          </Button>
-          <div id="clerk-captcha"></div>
-        </CardFooter>
+        <CardFooter className="flex-col gap-2"></CardFooter>
       </Card>
     );
   }
