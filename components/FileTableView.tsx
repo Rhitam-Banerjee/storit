@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import type { DashboardTableFileContents } from "@/exportTypes";
+import { PiFolderOpenFill, PiFolderSimpleFill } from "react-icons/pi";
 interface ComponentProps {
   files: DashboardTableFileContents[];
 }
@@ -29,7 +30,7 @@ export default function TableDemo({ files }: ComponentProps) {
   };
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableCaption>A list of your recent uploads.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Thumbnail</TableHead>
@@ -43,13 +44,25 @@ export default function TableDemo({ files }: ComponentProps) {
       <TableBody>
         {files.map((file, index) => (
           <TableRow key={index}>
-            <TableCell className="font-medium">
-              <Image
-                src={file.thumbnailUrl}
-                alt={file.name}
-                width={100}
-                height={100}
-              />
+            <TableCell
+              className={`${
+                file.type === "folder" ? "h-[93px]" : ""
+              } font-medium`}
+            >
+              {file.type === "folder" ? (
+                file.size > 0 ? (
+                  <PiFolderSimpleFill className="w-full h-[60px]" />
+                ) : (
+                  <PiFolderOpenFill className="w-full h-[60px]" />
+                )
+              ) : (
+                <Image
+                  src={file.thumbnailUrl}
+                  alt={file.name}
+                  width={100}
+                  height={100}
+                />
+              )}
             </TableCell>
             <TableCell className="font-medium">{file.name}</TableCell>
             <TableCell className="font-medium">{file.type}</TableCell>

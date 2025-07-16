@@ -46,7 +46,17 @@ export default function FileUpload({
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
-  const handleFileChange = () => {};
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        toast.error("File size exceeds 5MB limit");
+        return;
+      }
+      setFile(selectedFile);
+    }
+  };
   const handleFileUpload = async () => {
     if (!file) return;
 
@@ -99,7 +109,13 @@ export default function FileUpload({
     >
       <TbFileUpload className="text-heading3 text-chart-3 max-md:text-center" />
       <span className="text-small-text">
-        <b>Click to upload</b> or drag and drop assets
+        <b
+          className="cursor-pointer mr-[5px] hover:text-primary/70"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Browse
+        </b>
+        or drag and drop assets
       </span>
       <input
         type="file"

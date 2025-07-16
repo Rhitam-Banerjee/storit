@@ -20,13 +20,11 @@ import { toast } from "sonner";
 interface FileUploadChanges {
   userId: string;
   currentFolder: string | null;
-  handleCreateFolder: () => void;
   handleUpload: () => void;
 }
 export default function DashboardHeader({
   userId,
   currentFolder,
-  handleCreateFolder,
   handleUpload,
 }: FileUploadChanges) {
   const { user, isLoaded } = useUser();
@@ -41,6 +39,39 @@ export default function DashboardHeader({
       }
     : null;
   const handleFileUploadSuccess = () => {};
+  const handleCreateFolder = async () => {
+    if (!newFolderName.trim()) {
+      toast.error("Invalid Folder Name", {
+        description: "Please enter a valid folder name.",
+      });
+      return;
+    }
+
+    try {
+      await axios.post("/api/folders/create", {
+        name: newFolderName.trim(),
+        userId: userId,
+        parentId: currentFolder,
+      });
+
+      toast.success("Folder Created", {
+        description: `Folder "${newFolderName}" has been created successfully.`,
+      });
+
+      setNewFolderName("");
+
+      if (handleUpload) {
+        handleUpload();
+      }
+    } catch (error) {
+      console.error("Error creating folder:", error);
+      toast.error("Folder Creation Failed", {
+        description: "We couldn't create the folder. Please try again.",
+      });
+    } finally {
+      setNewFolderName("");
+    }
+  };
   if (!isLoaded) {
     return <h1>Loading...</h1>;
   }

@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
     const folderPath = parentId
       ? `/storIt/${userId}/folders/${parentId}`
       : `/storIt/${userId}`;
-    console.log("Running imagekit");
       
     const uploadResponse = await imagekit.upload({
       file: fileBuffer,
@@ -80,7 +79,6 @@ export async function POST(request: NextRequest) {
       folder: folderPath,
       useUniqueFileName: false,
     });
-    console.log("Running failed imagekit");
 
     const fileData = {
       name: originalFilename,

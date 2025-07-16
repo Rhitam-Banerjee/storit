@@ -1,7 +1,9 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { cookies } from "next/headers";
-
+export const metadata = {
+  title: "Dashboard | StorIt",
+};
 export default async function Layout({
   children,
 }: {

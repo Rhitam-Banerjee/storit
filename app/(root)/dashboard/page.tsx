@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import DashboardHeader from "@/components/DashboardHeader";
 import DashboardMain from "@/components/DashboardMain";
@@ -7,9 +6,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { DashboardTableFileContents } from "@/exportTypes";
-export const metadata = {
-  title: "Dashboard | StorIt",
-};
+
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
   const [currentFolder, setCurrentFolder] = useState<string | null>(null);
@@ -18,7 +15,6 @@ export default function Dashboard() {
   const handleFolderChange = useCallback((folderId: string | null) => {
     setCurrentFolder(folderId);
   }, []);
-  const handleCreateFolder = () => {};
   const getFiles = async () => {
     let url = `/api/files?userId=${user?.id}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
@@ -47,7 +43,6 @@ export default function Dashboard() {
       <DashboardHeader
         userId={user?.id ?? ""}
         currentFolder={currentFolder}
-        handleCreateFolder={handleCreateFolder}
         handleUpload={handleUpload}
       />
       <DashboardMain
