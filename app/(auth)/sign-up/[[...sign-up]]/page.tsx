@@ -1,10 +1,12 @@
-import Image from "next/image"
-import { PiCloudArrowUpDuotone } from "react-icons/pi"
-import Link from "next/link"
-import { SignUpForm } from "@/components/signup-form"
-import { ThemeToggle } from "@/components/ThemeToggle"
-// import SignUpForm from "@/components/SignUp"
+import Image from "next/image";
+import { PiCloudArrowUpDuotone } from "react-icons/pi";
+import Link from "next/link";
+import { SignUpForm } from "@/components/signup-form";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
+export const metadata = {
+  title: "Sign-Up | StorIt",
+};
 export default function SignUpPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -35,5 +37,5 @@ export default function SignUpPage() {
       </div>
     </div>
     // <SignUpForm />
-  )
+  );
 }

@@ -1,15 +1,16 @@
 // components
-import { LoginForm } from "@/components/login-form"
-import { ThemeToggle } from "@/components/ThemeToggle"
+import { LoginForm } from "@/components/login-form";
+import { ThemeToggle } from "@/components/ThemeToggle";
 // assets
-import { PiCloudArrowUpDuotone } from "react-icons/pi"
+import { PiCloudArrowUpDuotone } from "react-icons/pi";
 
-import Image from "next/image"
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 
+export const metadata = {
+  title: "Sign-In | StorIt",
+};
 export default function LoginPage() {
-  // const router = useRouter()
-
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="bg-muted relative hidden lg:block">
@@ -38,5 +39,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

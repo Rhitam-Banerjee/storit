@@ -7,7 +7,9 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { DashboardTableFileContents } from "@/exportTypes";
-
+export const metadata = {
+  title: "Dashboard | StorIt",
+};
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
   const [currentFolder, setCurrentFolder] = useState<string | null>(null);
