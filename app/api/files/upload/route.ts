@@ -15,7 +15,6 @@ const imagekit = new ImageKit({
 })
 
 export async function POST(request: NextRequest) {
-  console.log(process.env.publicKey);
   try {
     const { userId } = await auth();
     if (!userId) {
