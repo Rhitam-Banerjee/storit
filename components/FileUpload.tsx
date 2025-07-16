@@ -4,6 +4,7 @@ import { TbFileUpload } from "react-icons/tb";
 import { useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 interface FileUploadChanges {
@@ -18,7 +19,7 @@ export default function FileUpload({
   onUploadSuccess,
   handleUpload,
 }: FileUploadChanges) {
-  const { user, isLoaded } = useUser();
+  const { isLoaded } = useUser();
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -108,28 +109,35 @@ export default function FileUpload({
       onDragOver={handleDragOver}
     >
       <TbFileUpload className="text-heading3 text-chart-3 max-md:text-center" />
-      <span className="text-small-text">
-        <b
-          className="cursor-pointer mr-[5px] hover:text-primary/70"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          Browse
-        </b>
-        or drag and drop assets
-      </span>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-      />
-      {file && (
+      {!file ? (
         <>
-          <span>File name: {file?.name}</span>
-          <Button variant="outline" onClick={handleFileUpload}>
-            Upload
-          </Button>
+          <span className="text-small-text">
+            <b
+              className="cursor-pointer mr-[5px] hover:text-primary/70"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Browse
+            </b>
+            or drag and drop assets
+          </span>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </>
+      ) : (
+        <div className="mt-[10px] flex flex-col justify-center items-center gap-[10px]">
+          <span>File name: {file?.name}</span>
+          {uploading && <Progress value={progress} />}
+          <div className="flex flex-row items-center gap-[10px]">
+            <Button onClick={handleFileUpload}>Upload</Button>
+            <Button variant="outline" onClick={clearFile}>
+              Cancle
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );
