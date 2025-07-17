@@ -79,7 +79,7 @@ export default function DashboardHeader({
   }
 
   return (
-    <section className="w-full flex flex-col justify-center items-start p-4 rounded-md">
+    <section className="w-full flex flex-col justify-center items-start rounded-md">
       <h1 className="w-full text-heading4 text-chart-3 font-bold capitalize">
         Hello! {loggedUser?.username}
       </h1>

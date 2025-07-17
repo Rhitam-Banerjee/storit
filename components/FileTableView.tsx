@@ -10,20 +10,34 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import type { DashboardTableFileContents } from "@/exportTypes";
-import { PiFolderOpenFill, PiFolderSimpleFill } from "react-icons/pi";
+import { PiFolderSimpleFill } from "react-icons/pi";
 interface ComponentProps {
   files: DashboardTableFileContents[];
+  handleFolderClick?: (
+    folderId: string | null,
+    folderName: string | null
+  ) => void;
 }
-export default function TableDemo({ files }: ComponentProps) {
+export default function TableDemo({
+  files,
+  handleFolderClick,
+}: ComponentProps) {
   const openImageViewer = (file: DashboardTableFileContents) => {
     if (file.type.startsWith("image/")) {
       const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-90,w-1600,fo-auto/${file.path}`;
       window.open(optimizedUrl, "_blank");
     }
   };
+  const navigateToFolder = (folderId: string, folderName: string) => {
+    if (handleFolderClick) {
+      handleFolderClick(folderId, folderName);
+    }
+  };
   const handleItemClick = (file: DashboardTableFileContents) => {
     if (file.type.startsWith("image/")) {
       openImageViewer(file);
+    } else {
+      navigateToFolder(file.id, file.name);
     }
   };
   const getDateTime = (typeOutput = "date", value: string) => {
@@ -51,7 +65,6 @@ export default function TableDemo({ files }: ComponentProps) {
     do {
       if (totalSize === 0) break;
       totalSize /= 1024;
-      console.log(totalSize);
       index++;
     } while (totalSize > 1024);
     return `${totalSize > 0 ? totalSize.toFixed(2) : totalSize} ${
@@ -84,11 +97,7 @@ export default function TableDemo({ files }: ComponentProps) {
               } font-medium`}
             >
               {file.type === "folder" ? (
-                file.size > 0 ? (
-                  <PiFolderSimpleFill className="w-[60px] h-[60px]" />
-                ) : (
-                  <PiFolderOpenFill className="w-full h-[60px]" />
-                )
+                <PiFolderSimpleFill className="w-[60px] h-[60px]" />
               ) : (
                 <Image
                   src={file.thumbnailUrl}
@@ -101,7 +110,7 @@ export default function TableDemo({ files }: ComponentProps) {
             <TableCell className="font-medium">{file.name}</TableCell>
             <TableCell className="font-medium">{file.type}</TableCell>
             <TableCell className="font-medium">
-              {getTotalsize("single", file.size)}
+              {!file.isFolder && getTotalsize("single", file.size)}
             </TableCell>
             <TableCell className="text-right">
               {getDateTime("date", file.createdAt)}
@@ -114,7 +123,7 @@ export default function TableDemo({ files }: ComponentProps) {
       </TableBody>
       <TableFooter className="w-full">
         <TableRow className="w-full">
-          <TableCell colSpan={5}>Total Size</TableCell>
+          <TableCell colSpan={5}>Total Size of this folder</TableCell>
           <TableCell className="text-right">{getTotalsize()}</TableCell>
         </TableRow>
       </TableFooter>

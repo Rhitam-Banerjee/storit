@@ -4,16 +4,19 @@ import type { DashboardTableFileContents } from "@/exportTypes";
 interface FileUploadChanges {
   files: DashboardTableFileContents[];
   currentFolder: string | null;
-  handleFolderChange?: (folderId: string | null) => void;
+  handleFolderClick?: (
+    folderId: string | null,
+    folderName: string | null
+  ) => void;
 }
 export default function DashboardMain({
   files,
   currentFolder,
-  handleFolderChange,
+  handleFolderClick,
 }: FileUploadChanges) {
   return (
-    <div className="w-full flex flex-col justify-center items-start p-4 rounded-md ">
-      <FileTableView files={files} />
+    <div className="w-full flex flex-col justify-center items-start rounded-md ">
+      <FileTableView files={files} handleFolderClick={handleFolderClick} />
     </div>
   );
 }

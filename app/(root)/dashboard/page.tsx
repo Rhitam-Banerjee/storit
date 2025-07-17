@@ -6,22 +6,45 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { DashboardTableFileContents } from "@/exportTypes";
-
+import { Button } from "@/components/ui/button";
+interface FolderPathContent {
+  id: string | null;
+  name: string | null;
+}
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
+  const [folderPath, setFolderPath] = useState<FolderPathContent[]>([
+    { id: null, name: "Home" },
+  ]);
   const [currentFolder, setCurrentFolder] = useState<string | null>(null);
   const [files, setFiles] = useState<DashboardTableFileContents[]>([]);
 
-  const handleFolderChange = useCallback((folderId: string | null) => {
-    setCurrentFolder(folderId);
-  }, []);
+  const handleFolderChange = useCallback(
+    (folderId: string | null, folderName: string | null) => {
+      setCurrentFolder(folderId);
+      setFolderPath((prev) => [...prev, { id: folderId, name: folderName }]);
+    },
+    []
+  );
+  const navigateToPathFolder = (index: number) => {
+    if (index < 0) {
+      setCurrentFolder(null);
+      setFolderPath([{ id: null, name: "Home" }]);
+    } else {
+      const newPath = folderPath.slice(0, index + 1);
+      setFolderPath(newPath);
+      const newFolderId = newPath[newPath.length - 1].id;
+      setCurrentFolder(newFolderId);
+    }
+  };
   const getFiles = async () => {
     let url = `/api/files?userId=${user?.id}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
+    console.log(folderPath);
+
     try {
       const response = await axios.get(url);
       setFiles(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
       toast.error("Error Loading Files", {
@@ -34,7 +57,7 @@ export default function Dashboard() {
   };
   useEffect(() => {
     getFiles();
-  }, []);
+  }, [currentFolder]);
 
   if (!isLoaded) return <h1>Loading...</h1>;
 
@@ -45,10 +68,29 @@ export default function Dashboard() {
         currentFolder={currentFolder}
         handleUpload={handleUpload}
       />
+
+      <div className="w-full flex flex-row items-center">
+        <span className="font-bold mr-[20px]">Path :</span>
+        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-sm">
+          {folderPath.map((path, index) => {
+            return (
+              <div key={index}>
+                <Button
+                  className="mr-[10px]"
+                  onClick={() => navigateToPathFolder(index)}
+                >
+                  {path.name}
+                </Button>
+                <span className="font-black">/</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <DashboardMain
         files={files}
         currentFolder={currentFolder}
-        handleFolderChange={handleFolderChange}
+        handleFolderClick={handleFolderChange}
       />
     </div>
   );
