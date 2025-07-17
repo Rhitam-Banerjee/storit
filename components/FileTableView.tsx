@@ -39,6 +39,25 @@ export default function TableDemo({ files }: ComponentProps) {
     }
     return "";
   };
+  const getTotalsize = (sizeType = "total", defaultSize = 0) => {
+    const sizeArr = ["B", "KB", "MB"];
+    let totalSize = defaultSize;
+    let index = 0;
+    if (sizeType === "total") {
+      totalSize = files.reduce((totalSize, file) => {
+        return totalSize + file.size;
+      }, 0);
+    }
+    do {
+      if (totalSize === 0) break;
+      totalSize /= 1024;
+      console.log(totalSize);
+      index++;
+    } while (totalSize > 1024);
+    return `${totalSize > 0 ? totalSize.toFixed(2) : totalSize} ${
+      sizeArr[index]
+    }`;
+  };
   return (
     <Table>
       <TableCaption>A list of your recent uploads.</TableCaption>
@@ -54,7 +73,11 @@ export default function TableDemo({ files }: ComponentProps) {
       </TableHeader>
       <TableBody>
         {files.map((file, index) => (
-          <TableRow key={index} onClick={() => handleItemClick(file)}>
+          <TableRow
+            key={index}
+            onClick={() => handleItemClick(file)}
+            className=" text-left"
+          >
             <TableCell
               className={`${
                 file.type === "folder" ? "h-[93px]" : ""
@@ -62,7 +85,7 @@ export default function TableDemo({ files }: ComponentProps) {
             >
               {file.type === "folder" ? (
                 file.size > 0 ? (
-                  <PiFolderSimpleFill className="w-full h-[60px]" />
+                  <PiFolderSimpleFill className="w-[60px] h-[60px]" />
                 ) : (
                   <PiFolderOpenFill className="w-full h-[60px]" />
                 )
@@ -77,7 +100,9 @@ export default function TableDemo({ files }: ComponentProps) {
             </TableCell>
             <TableCell className="font-medium">{file.name}</TableCell>
             <TableCell className="font-medium">{file.type}</TableCell>
-            <TableCell className="font-medium">{file.size} B</TableCell>
+            <TableCell className="font-medium">
+              {getTotalsize("single", file.size)}
+            </TableCell>
             <TableCell className="text-right">
               {getDateTime("date", file.createdAt)}
             </TableCell>
@@ -90,12 +115,7 @@ export default function TableDemo({ files }: ComponentProps) {
       <TableFooter className="w-full">
         <TableRow className="w-full">
           <TableCell colSpan={5}>Total Size</TableCell>
-          <TableCell className="text-right">
-            {files.reduce((totalSize, file) => {
-              return totalSize + file.size;
-            }, 0)}{" "}
-            B
-          </TableCell>
+          <TableCell className="text-right">{getTotalsize()}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

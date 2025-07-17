@@ -29,6 +29,7 @@ export default function DashboardHeader({
 }: FileUploadChanges) {
   const { user, isLoaded } = useUser();
   const [newFolderName, setNewFolderName] = useState<string>("");
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const loggedUser = user
     ? {
@@ -59,6 +60,7 @@ export default function DashboardHeader({
       });
 
       setNewFolderName("");
+      setDialogOpen(false);
 
       if (handleUpload) {
         handleUpload();
@@ -90,7 +92,13 @@ export default function DashboardHeader({
         onUploadSuccess={handleFileUploadSuccess}
         handleUpload={handleUpload}
       />
-      <Dialog onOpenChange={() => setNewFolderName("")}>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={() => {
+          setDialogOpen(true);
+          setNewFolderName("");
+        }}
+      >
         <DialogTrigger className="w-full -9 px-4 py-2 mt-[10px] max-w-[300px] mx-auto bg-primary hover:bg-primary/50 rounded-md text-sm text-secondary font-medium transition-all">
           Create New Folder
         </DialogTrigger>

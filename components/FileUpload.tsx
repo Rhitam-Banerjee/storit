@@ -37,7 +37,9 @@ export default function FileUpload({
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
       if (droppedFile.size > 5 * 1024 * 1024) {
-        toast.error("File size exceeds 5MB limit");
+        toast.error("Upload Failed", {
+          description: "The file size exceeds 5MB limit",
+        });
         return;
       }
       setFile(droppedFile);
