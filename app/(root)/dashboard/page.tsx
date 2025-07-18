@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import DashboardHeader from "@/components/DashboardHeader";
 import DashboardMain from "@/components/DashboardMain";
@@ -40,13 +41,11 @@ export default function Dashboard() {
   const getFiles = async () => {
     let url = `/api/files?userId=${user?.id}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
-    console.log(folderPath);
 
     try {
       const response = await axios.get(url);
       setFiles(response.data);
     } catch (error) {
-      console.log(error);
       toast.error("Error Loading Files", {
         description: "We Couldn't load your files. Please try again.",
       });

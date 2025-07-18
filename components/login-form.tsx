@@ -23,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -30,7 +31,6 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
   const { signIn, isLoaded, setActive } = useSignIn();
   const form = useForm({
     resolver: zodResolver(signInSchema),
@@ -42,7 +42,6 @@ export function LoginForm({
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     if (!isLoaded) return;
     setIsSubmitting(true);
-    setAuthError(null);
     try {
       const results = await signIn.create({
         identifier: data.email,
@@ -52,15 +51,16 @@ export function LoginForm({
         await setActive({ session: results.createdSessionId });
         router.push("/dashboard");
       } else {
-        console.log("Sign In incomplete");
-        setAuthError("Sign in could not be completed dute to some error");
+        toast.error("Sign-In incomplete", {
+          description: "Sign-In could not be completed dute to some error",
+        });
       }
     } catch (error: any) {
-      console.error("Sign-in error:", error);
-      setAuthError(
-        error.errors?.[0]?.message ||
-          "An error occurred during sign-in. Please try again."
-      );
+      toast.error("Sign-In incomplete", {
+        description:
+          error.errors?.[0]?.message ||
+          "Unable to Sign in due to some error. Please try again",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -78,7 +78,6 @@ export function LoginForm({
             Enter your email below to login to your account
           </p>
         </div>
-        {authError && <p className="text-muted-foreground">{authError}</p>}
         <div className="grid gap-6">
           <div className="grid gap-3">
             <FormField

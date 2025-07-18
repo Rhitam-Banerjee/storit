@@ -40,7 +40,6 @@ export async function POST(req: NextRequest, props: { params: Promise<{ fileId: 
       eq(files.id, fileId),
       eq(files.userId, userId)
     )).returning()
-    console.log(updatedFiles);
     const updatedFile = updatedFiles[0]
     return NextResponse.json(updatedFile)
   } catch (error) {

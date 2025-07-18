@@ -106,8 +106,6 @@ export default function Navbar() {
                     <DropdownMenuItem
                       onClick={() => {
                         signOut(() => {
-                          console.log("Logout");
-
                           router.push("/");
                         });
                       }}
@@ -161,8 +159,6 @@ export default function Navbar() {
                     <DropdownMenuItem
                       onClick={() => {
                         signOut(() => {
-                          console.log("Logout");
-
                           router.push("/");
                         });
                       }}

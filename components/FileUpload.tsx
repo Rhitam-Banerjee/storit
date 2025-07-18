@@ -31,8 +31,6 @@ export default function FileUpload({
     }
   };
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log("running");
-
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
@@ -68,7 +66,6 @@ export default function FileUpload({
     formData.append("userId", userId);
     if (currentFolder) {
       formData.append("parentId", currentFolder);
-      console.log(currentFolder);
     }
 
     setUploading(true);
@@ -93,7 +90,6 @@ export default function FileUpload({
       });
       handleUpload();
     } catch (error) {
-      console.log(error);
       toast.error("Upload Failed", {
         description: "Ther was a problem while uploading file",
       });

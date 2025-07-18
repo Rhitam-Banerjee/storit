@@ -23,7 +23,6 @@ const authenticator = async () => {
     const data = await response.json();
     return data;
   } catch (err) {
-    console.log("Authentication error");
     throw err;
   }
 };
