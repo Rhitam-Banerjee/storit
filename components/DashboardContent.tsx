@@ -87,11 +87,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
           })}
         </div>
       </div>
-      <DashboardMain
-        files={files}
-        currentFolder={currentFolder}
-        handleFolderClick={handleFolderChange}
-      />
+      <DashboardMain files={files} handleFolderClick={handleFolderChange} />
     </div>
   );
 }
