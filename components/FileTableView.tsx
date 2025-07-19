@@ -98,7 +98,7 @@ export default function TableDemo({
     <Table>
       <TableCaption>A list of your recent uploads.</TableCaption>
       <TableHeader>
-        <TableRow>
+        <TableRow className="bg-chart-3">
           <TableHead>Thumbnail</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Type</TableHead>
@@ -122,7 +122,7 @@ export default function TableDemo({
               checkClickedFiles();
             }}
             onDoubleClick={() => handleItemClick(file)}
-            className={`hover:bg-secondary text-left ${
+            className={`cursor-pointer hover:bg-secondary text-left ${
               clickedFiles.indexOf(file) !== -1 ? "bg-secondary" : ""
             }`}
           >
@@ -156,8 +156,8 @@ export default function TableDemo({
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter className="w-full">
-        <TableRow className="w-full">
+      <TableFooter className="h-[60px] bg-secondary">
+        <TableRow className="font-bold">
           <TableCell colSpan={5}>Total Size of this folder</TableCell>
           <TableCell className="text-right">{getTotalsize()}</TableCell>
         </TableRow>

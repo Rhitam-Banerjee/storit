@@ -17,6 +17,7 @@ interface DashboardContentProps {
 }
 
 export default function DashboardContent({ userId }: DashboardContentProps) {
+  const [pathClicked, setPathClicked] = useState(false);
   const [folderPath, setFolderPath] = useState<FolderPathContent[]>([
     { id: null, name: "Home" },
   ]);
@@ -31,6 +32,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     []
   );
   const navigateToPathFolder = (index: number) => {
+    setPathClicked(!pathClicked);
     if (index < 0) {
       setCurrentFolder(null);
       setFolderPath([{ id: null, name: "Home" }]);
@@ -71,23 +73,30 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
 
       <div className="w-full flex flex-row items-center">
         <span className="font-bold mr-[20px]">Path :</span>
-        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-sm">
+        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-sm shadow-primary/20">
           {folderPath.map((path, index) => {
             return (
-              <div key={index}>
+              <div
+                key={index}
+                className="flex flex-row items-center justify-start"
+              >
                 <Button
-                  className="mr-[10px]"
+                  className="mr-[10px] font-bold"
                   onClick={() => navigateToPathFolder(index)}
                 >
                   {path.name}
                 </Button>
-                <span className="font-black">/</span>
+                <span className="font-semibold text-heading4">/</span>
               </div>
             );
           })}
         </div>
       </div>
-      <DashboardMain files={files} handleFolderClick={handleFolderChange} />
+      <DashboardMain
+        files={files}
+        pathClicked={pathClicked}
+        handleFolderClick={handleFolderChange}
+      />
     </div>
   );
 }

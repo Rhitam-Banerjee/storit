@@ -3,8 +3,12 @@
 import FileTableView from "@/components/FileTableView";
 import type { DashboardTableFileContents } from "@/exportTypes";
 import { useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
+import { TiStar } from "react-icons/ti";
+import { TbTrashX } from "react-icons/tb";
 interface FileUploadChanges {
   files: DashboardTableFileContents[];
+  pathClicked: boolean;
   handleFolderClick?: (
     folderId: string | null,
     folderName: string | null
@@ -12,6 +16,7 @@ interface FileUploadChanges {
 }
 export default function DashboardMain({
   files,
+  pathClicked,
   handleFolderClick,
 }: FileUploadChanges) {
   const [selectCount, setSelectCount] = useState(0);
@@ -22,18 +27,29 @@ export default function DashboardMain({
   useEffect(() => {
     setSelectCount(0);
     setRemoveClickedFiles(!removedClickedFiles);
-  }, []);
+  }, [pathClicked]);
   useEffect(() => {
     handleClickedFiles(selectCount);
   }, [selectCount, files]);
   return (
     <div className="w-full flex flex-col justify-center items-start rounded-md ">
       {selectCount > 0 && (
-        <div className="flex flex-row items-center justify-start gap-[10px]">
-          <span>{selectCount} Selected</span>
-          <span onClick={() => setRemoveClickedFiles(!removedClickedFiles)}>
-            Remove
-          </span>
+        <div className="w-full p-4 flex flex-row items-center justify-between gap-[40px] bg-secondary/50 rounded-t-md">
+          <div
+            className="flex-1 flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer"
+            onClick={() => setRemoveClickedFiles(!removedClickedFiles)}
+          >
+            <IoClose className="size-5" />
+            <span>{selectCount} Selected</span>
+          </div>
+          <div className="flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer">
+            <TiStar className="size-5" />
+            <span>Star</span>
+          </div>
+          <div className="flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer">
+            <TbTrashX className="size-5" />
+            <span>Trash</span>
+          </div>
         </div>
       )}
       <FileTableView
