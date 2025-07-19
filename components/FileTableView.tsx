@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -11,17 +12,25 @@ import {
 import Image from "next/image";
 import type { DashboardTableFileContents } from "@/exportTypes";
 import { PiFolderSimpleFill } from "react-icons/pi";
+import { useEffect, useState } from "react";
 interface ComponentProps {
   files: DashboardTableFileContents[];
+  removedClickedFiles: boolean;
   handleFolderClick?: (
     folderId: string | null,
     folderName: string | null
   ) => void;
+  handleClickedFiles?: (checkClicked: number) => void;
 }
 export default function TableDemo({
   files,
+  removedClickedFiles,
   handleFolderClick,
+  handleClickedFiles,
 }: ComponentProps) {
+  const [clickedFiles, setClickedFiles] = useState<
+    DashboardTableFileContents[]
+  >([]);
   const openImageViewer = (file: DashboardTableFileContents) => {
     if (file.type.startsWith("image/")) {
       const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-90,w-1600,fo-auto/${file.path}`;
@@ -31,6 +40,9 @@ export default function TableDemo({
   const navigateToFolder = (folderId: string, folderName: string) => {
     if (handleFolderClick) {
       handleFolderClick(folderId, folderName);
+      if (handleClickedFiles) {
+        handleClickedFiles(0);
+      }
     }
   };
   const handleItemClick = (file: DashboardTableFileContents) => {
@@ -71,6 +83,17 @@ export default function TableDemo({
       sizeArr[index]
     }`;
   };
+  const checkClickedFiles = () => {
+    if (handleClickedFiles) {
+      handleClickedFiles(clickedFiles.length);
+    }
+  };
+  useEffect(() => {
+    setClickedFiles([]);
+  }, [removedClickedFiles]);
+  useEffect(() => {
+    checkClickedFiles();
+  }, [clickedFiles]);
   return (
     <Table>
       <TableCaption>A list of your recent uploads.</TableCaption>
@@ -88,8 +111,20 @@ export default function TableDemo({
         {files.map((file, index) => (
           <TableRow
             key={index}
-            onClick={() => handleItemClick(file)}
-            className=" text-left"
+            onClick={() => {
+              if (clickedFiles.includes(file))
+                setClickedFiles(
+                  clickedFiles.filter(
+                    (clickedFile) => clickedFile.id !== file.id
+                  )
+                );
+              else setClickedFiles([...clickedFiles, file]);
+              checkClickedFiles();
+            }}
+            onDoubleClick={() => handleItemClick(file)}
+            className={`hover:bg-secondary text-left ${
+              clickedFiles.indexOf(file) !== -1 ? "bg-secondary" : ""
+            }`}
           >
             <TableCell
               className={`${
