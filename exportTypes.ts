@@ -1,10 +1,16 @@
 export interface DashboardTableFileContents {
   id:string;
   name: string;
-  thumbnailUrl: string;
   path:string;
   size: number;
-  createdAt: string;
   type:string
+  fileUrl:string;
+  thumbnailUrl: string;
+  userId:string;
+  parentId:string;
   isFolder:boolean;
+  isStared:boolean;
+  isTrash:boolean;
+  createdAt: string;
+  updatedAt:string;
 }

@@ -73,7 +73,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
 
       <div className="w-full flex flex-row items-center">
         <span className="font-bold mr-[20px]">Path :</span>
-        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-sm shadow-primary/20">
+        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-xs shadow-primary/10">
           {folderPath.map((path, index) => {
             return (
               <div

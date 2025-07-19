@@ -33,7 +33,7 @@ export default function DashboardMain({
   }, [selectCount, files]);
   return (
     <div className="w-full flex flex-col justify-center items-start rounded-md ">
-      {selectCount > 0 && (
+      {selectCount > 0 ? (
         <div className="w-full p-4 flex flex-row items-center justify-between gap-[40px] bg-secondary/50 rounded-t-md">
           <div
             className="flex-1 flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer"
@@ -51,6 +51,8 @@ export default function DashboardMain({
             <span>Trash</span>
           </div>
         </div>
+      ) : (
+        <div className="w-full h-[54.5px]"></div>
       )}
       <FileTableView
         files={files}
