@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { DashboardTableFileContents } from "@/exportTypes";
 import { Button } from "@/components/ui/button";
+import { DashboardTabs, FileTypes } from "@/constants/dashboardTabs";
 interface FolderPathContent {
   id: string | null;
   name: string | null;
@@ -20,6 +21,7 @@ interface DashboardContentProps {
 export default function DashboardContent({ userId }: DashboardContentProps) {
   const [pathClicked, setPathClicked] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [activeFileType, setActiveFileType] = useState("all");
   const [folderPath, setFolderPath] = useState<FolderPathContent[]>([
     { id: null, name: "Home" },
   ]);
@@ -45,8 +47,8 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
       setCurrentFolder(newFolderId);
     }
   };
-  const getFiles = async (fileSection: string) => {
-    let url = `/api/files?userId=${userId}&fileSection=${fileSection}`;
+  const getFiles = async (fileSection: string, fileType: string) => {
+    let url = `/api/files?userId=${userId}&fileSection=${fileSection}&fileType=${fileType}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
 
     try {
@@ -64,14 +66,16 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     }
   };
   const handleUpload = () => {
-    getFiles("all");
+    getFiles(activeTab, activeFileType);
   };
   useEffect(() => {
-    getFiles("all");
+    getFiles("all", "all");
+    setActiveTab("all");
+    setActiveFileType("all");
   }, [userId, currentFolder]);
 
   return (
-    <div className="flex flex-col justify-between items-center w-full gap-[10px]">
+    <div className="flex flex-col justify-between items-center w-full gap-[15px]">
       <DashboardHeader
         userId={userId}
         currentFolder={currentFolder}
@@ -80,40 +84,82 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
 
       <div className="w-full flex flex-row items-center text-small-text">
         <span className="font-bold mr-[20px]">Path :</span>
-        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-xs shadow-primary/10 overflow-x-auto">
+        <div className="w-max flex flex-row items-center justify-start p-2 rounded-md shadow-xs shadow-primary/10 overflow-x-auto">
           {folderPath.map((path, index) => {
             return (
               <div
                 key={index}
                 className="flex flex-row items-center justify-start"
               >
-                <Button
-                  className="mr-[10px] font-bold !text-small-text text-primary-foreground"
+                {index > 0 && (
+                  <span className="mx-[10px] font-semibold text-small-text">
+                    &gt;
+                  </span>
+                )}
+                <span
+                  className="font-semibold text-small-text cursor-pointer hover:underline"
                   onClick={() => navigateToPathFolder(index)}
                 >
                   {path.name}
-                </Button>
-                <span className="font-semibold text-heading4">/</span>
+                </span>
               </div>
             );
           })}
         </div>
       </div>
-      <div className="ml-auto w-max flex flex-row items-center justify-start gap-[20px]">
-        {["all", "trash", "star"].map((item, index) => (
-          <span
-            key={index}
-            onClick={() => {
-              setActiveTab((prev) => (prev = item));
-              getFiles(item);
-            }}
-            className={`${
-              activeTab === item ? "underline" : "hover:underline"
-            } capitalize p-1 font-bold cursor-pointer`}
-          >
-            {item}
-          </span>
-        ))}
+      <div className="mt-[20px] w-full flex flex-row items-center justify-between max-md:flex-col max-md:justify-center max-md:items-start gap-[20px]">
+        <div className="mr-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
+          <span className="font-bold text-[12px]">Tabs :</span>
+          {DashboardTabs.map((item, index) => (
+            <span
+              key={index}
+              onClick={() => {
+                setActiveTab((prev) => (prev = item.name));
+                getFiles(item.name, activeFileType);
+              }}
+              className="h-full flex flex-row items-center justify-start gap-[5px] transition-all"
+            >
+              <item.icon
+                name="icon"
+                title={item.name}
+                className={`${
+                  activeTab === item.name ? "size-5" : ""
+                } cursor-pointer transition-all`}
+              />
+              {activeTab === item.name && (
+                <span className="capitalize text-[12px] font-semibold mt-[2px]">
+                  {item.name}
+                </span>
+              )}
+            </span>
+          ))}
+        </div>
+        <div className="ml-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
+          <span className="font-bold text-[12px]">Tabs :</span>
+          {FileTypes.map((item, index) => (
+            <span
+              key={index}
+              onClick={() => {
+                setActiveFileType((prev) => (prev = item.name));
+                getFiles(activeTab, item.name);
+              }}
+              className="h-full flex flex-row items-center justify-start gap-[5px] transition-all"
+            >
+              <item.icon
+                name="icon"
+                title={item.name}
+                className={`${
+                  activeFileType === item.name ? "size-5" : ""
+                } cursor-pointer transition-all`}
+              />
+              {activeFileType === item.name && (
+                <span className="capitalize text-[12px] font-semibold mt-[2px]">
+                  {item.name}
+                </span>
+              )}
+            </span>
+          ))}
+        </div>
       </div>
       <DashboardMain
         files={files}

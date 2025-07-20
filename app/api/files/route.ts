@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { files } from "@/lib/db/schema";
-import { eq, isNull, and } from "drizzle-orm";
+import { eq, isNull, and, like } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     const queryUserId = searchParams.get("userId");
     const parentId = searchParams.get("parentId");
     const fileSection = searchParams.get("fileSection") || "all";
-    // const fileType = searchParams.get("fileType") || "all";
+    const fileType = searchParams.get("fileType") || "all";
     if (queryUserId !== userId || !queryUserId) {
       return NextResponse.json(
         {
@@ -33,23 +33,6 @@ export async function GET(req: NextRequest) {
         }
       );
     }
-    // let userFiles
-
-    // if (parentId) {
-    //   userFiles = await db.select().from(files).where(
-    //     and(
-    //       eq(files.userId, userId),
-    //       eq(files.parentId, parentId)
-    //     )
-    //   )
-    // } else {
-    //   userFiles = await db.select().from(files).where(
-    //     and(
-    //       eq(files.userId, userId),
-    //       isNull(files.parentId)
-    //     )
-    //   )
-    // }
     const filters = [eq(files.userId, userId)];
     if (parentId) {
       filters.push(eq(files.parentId, parentId));
@@ -60,6 +43,13 @@ export async function GET(req: NextRequest) {
       filters.push(eq(files.isTrash, true));
     } else if (fileSection === "star") {
       filters.push(eq(files.isStared, true));
+    }
+    if (fileType === "images") {
+      filters.push(like(files.type, "image/%"));
+    } else if (fileType === "folders") {
+      filters.push(eq(files.type, "folder"));
+    } else if (fileType === "docs") {
+      filters.push(eq(files.type, "docs"));
     }
     const userFiles = await db
       .select()
