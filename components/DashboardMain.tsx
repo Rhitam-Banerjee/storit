@@ -8,16 +8,20 @@ import { IoClose } from "react-icons/io5";
 import { TiStar } from "react-icons/ti";
 import { TbTrashX } from "react-icons/tb";
 interface FileUploadChanges {
+  userId: string;
   files: DashboardTableFileContents[];
   pathClicked: boolean;
+  reloadFiles: () => void;
   handleFolderClick?: (
     folderId: string | null,
     folderName: string | null
   ) => void;
 }
 export default function DashboardMain({
+  userId,
   files,
   pathClicked,
+  reloadFiles,
   handleFolderClick,
 }: FileUploadChanges) {
   const [selectCount, setSelectCount] = useState(0);
@@ -52,7 +56,9 @@ export default function DashboardMain({
         <div className="w-full h-[54.5px]"></div>
       )}
       <FileTableView
+        userId={userId}
         files={files}
+        reloadFiles={reloadFiles}
         removedClickedFiles={removedClickedFiles}
         handleClickedFiles={handleClickedFiles}
         handleFolderClick={handleFolderClick}

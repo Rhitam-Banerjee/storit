@@ -59,6 +59,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
         }
       );
       setFiles(sortedFiles);
+      console.log(sortedFiles);
     } catch (error) {
       toast.error("Error Loading Files", {
         description: "We Couldn't load your files. Please try again.",
@@ -66,6 +67,9 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     }
   };
   const handleUpload = () => {
+    getFiles(activeTab, activeFileType);
+  };
+  const reloadFiles = () => {
     getFiles(activeTab, activeFileType);
   };
   useEffect(() => {
@@ -162,8 +166,10 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
         </div>
       </div>
       <DashboardMain
+        userId={userId}
         files={files}
         pathClicked={pathClicked}
+        reloadFiles={reloadFiles}
         handleFolderClick={handleFolderChange}
       />
     </div>
