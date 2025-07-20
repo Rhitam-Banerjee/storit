@@ -43,6 +43,8 @@ export async function GET(req: NextRequest) {
       filters.push(eq(files.isTrash, true));
     } else if (fileSection === "star") {
       filters.push(eq(files.isStared, true));
+    } else {
+      filters.push(eq(files.isTrash, false));
     }
     if (fileType === "images") {
       filters.push(like(files.type, "image/%"));

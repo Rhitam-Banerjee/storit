@@ -88,7 +88,16 @@ export default function TableDemo({
     }
   };
   const handleTrash = async (file: DashboardTableFileContents) => {
-    console.log("Star\n", file);
+    const url = `/api/files/${file.id}/trash`;
+    const response = await axios
+      .post(url)
+      .then((res) => res.data)
+      .catch((err) =>
+        toast.error("Unable to move the file to trash", { description: err })
+      );
+    if (response && response.success && reloadFiles) {
+      reloadFiles();
+    }
   };
   const handleStar = async (file: DashboardTableFileContents) => {
     const url = `/api/files/${file.id}/star`;
@@ -96,7 +105,7 @@ export default function TableDemo({
       .post(url)
       .then((res) => res.data)
       .catch((err) =>
-        toast.error("Unable to change the name", { description: err })
+        toast.error("Unable to star the file", { description: err })
       );
     if (response && response.success && reloadFiles) {
       reloadFiles();
