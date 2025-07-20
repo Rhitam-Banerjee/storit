@@ -135,7 +135,7 @@ export default function TableDemo({
         {files.map((file, index) => (
           <TableRow
             key={index}
-            className={`cursor-pointer hover:bg-secondary text-left ${
+            className={`cursor-pointer hover:bg-secondary text-small-text text-left ${
               clickedFiles.indexOf(file) !== -1 ? "bg-secondary" : ""
             }`}
             onDoubleClick={() => handleItemClick(file)}
@@ -166,7 +166,11 @@ export default function TableDemo({
                 />
               )}
             </TableCell>
-            <TableCell className="font-medium">{file.name}</TableCell>
+            <TableCell
+              className={`font-bold ${file.isStared ? "text-chart-3" : ""}`}
+            >
+              {file.name}
+            </TableCell>
             <TableCell className="font-medium">{file.type}</TableCell>
             <TableCell className="font-medium">
               {!file.isFolder && getTotalsize("single", file.size)}

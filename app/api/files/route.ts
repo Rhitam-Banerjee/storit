@@ -7,49 +7,74 @@ import { eq, isNull, and } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth()
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({
-        error: "Unauthorised USER"
-      }, {
-        status: 401
-      })
+      return NextResponse.json(
+        {
+          error: "Unauthorised USER",
+        },
+        {
+          status: 401,
+        }
+      );
     }
-    const searchParams = req.nextUrl.searchParams
-    const queryUserId = searchParams.get("userId")
-    const parentId = searchParams.get("parentId")
+    const searchParams = req.nextUrl.searchParams;
+    const queryUserId = searchParams.get("userId");
+    const parentId = searchParams.get("parentId");
+    const fileSection = searchParams.get("fileSection") || "all";
+    // const fileType = searchParams.get("fileType") || "all";
     if (queryUserId !== userId || !queryUserId) {
-      return NextResponse.json({
-        error: "Unauthorised USER"
-      }, {
-        status: 401
-      })
+      return NextResponse.json(
+        {
+          error: "Unauthorised USER",
+        },
+        {
+          status: 401,
+        }
+      );
     }
-    let userFiles
-    if (parentId) {
-      userFiles = await db.select().from(files).where(
-        and(
-          eq(files.userId, userId),
-          eq(files.parentId, parentId)
-        )
-      )
-    } else {
-      userFiles = await db.select().from(files).where(
-        and(
-          eq(files.userId, userId),
-          isNull(files.parentId)
-        )
-      )
-    }
-    return NextResponse.json(
-      userFiles
-    )
-  } catch (error) {
-    return NextResponse.json({
-      error: "File Not found"
-    }, {
-      status: 500
-    })
-  }
+    // let userFiles
 
+    // if (parentId) {
+    //   userFiles = await db.select().from(files).where(
+    //     and(
+    //       eq(files.userId, userId),
+    //       eq(files.parentId, parentId)
+    //     )
+    //   )
+    // } else {
+    //   userFiles = await db.select().from(files).where(
+    //     and(
+    //       eq(files.userId, userId),
+    //       isNull(files.parentId)
+    //     )
+    //   )
+    // }
+    const filters = [eq(files.userId, userId)];
+    if (parentId) {
+      filters.push(eq(files.parentId, parentId));
+    } else {
+      filters.push(isNull(files.parentId));
+    }
+    if (fileSection === "trash") {
+      filters.push(eq(files.isTrash, true));
+    } else if (fileSection === "star") {
+      filters.push(eq(files.isStared, true));
+    }
+    const userFiles = await db
+      .select()
+      .from(files)
+      .where(and(...filters));
+
+    return NextResponse.json(userFiles);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "File Not found",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

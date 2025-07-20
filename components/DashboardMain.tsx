@@ -44,10 +44,6 @@ export default function DashboardMain({
             <span>{selectCount} Selected</span>
           </div>
           <div className="flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer">
-            <TiStar className="size-5" />
-            <span>Star</span>
-          </div>
-          <div className="flex flex-row items-center justify-start gap-[5px] text-small-text font-bold cursor-pointer">
             <TbTrashX className="size-5" />
             <span>Trash</span>
           </div>

@@ -19,6 +19,7 @@ interface DashboardContentProps {
 
 export default function DashboardContent({ userId }: DashboardContentProps) {
   const [pathClicked, setPathClicked] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
   const [folderPath, setFolderPath] = useState<FolderPathContent[]>([
     { id: null, name: "Home" },
   ]);
@@ -44,13 +45,18 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
       setCurrentFolder(newFolderId);
     }
   };
-  const getFiles = async () => {
-    let url = `/api/files?userId=${userId}`;
+  const getFiles = async (fileSection: string) => {
+    let url = `/api/files?userId=${userId}&fileSection=${fileSection}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
 
     try {
       const response = await axios.get(url);
-      setFiles(response.data);
+      const sortedFiles = response.data.sort(
+        (a: DashboardTableFileContents, b: DashboardTableFileContents) => {
+          return Number(b.isStared) - Number(a.isStared);
+        }
+      );
+      setFiles(sortedFiles);
     } catch (error) {
       toast.error("Error Loading Files", {
         description: "We Couldn't load your files. Please try again.",
@@ -58,23 +64,23 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     }
   };
   const handleUpload = () => {
-    getFiles();
+    getFiles("all");
   };
   useEffect(() => {
-    getFiles();
+    getFiles("all");
   }, [userId, currentFolder]);
 
   return (
-    <div className="flex flex-col justify-between items-center w-full gap-[30px]">
+    <div className="flex flex-col justify-between items-center w-full gap-[10px]">
       <DashboardHeader
         userId={userId}
         currentFolder={currentFolder}
         handleUpload={handleUpload}
       />
 
-      <div className="w-full flex flex-row items-center">
+      <div className="w-full flex flex-row items-center text-small-text">
         <span className="font-bold mr-[20px]">Path :</span>
-        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-xs shadow-primary/10">
+        <div className="flex-1 flex flex-row items-center justify-start gap-[10px] p-2 rounded-md shadow-xs shadow-primary/10 overflow-x-auto">
           {folderPath.map((path, index) => {
             return (
               <div
@@ -82,7 +88,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
                 className="flex flex-row items-center justify-start"
               >
                 <Button
-                  className="mr-[10px] font-bold"
+                  className="mr-[10px] font-bold !text-small-text text-primary-foreground"
                   onClick={() => navigateToPathFolder(index)}
                 >
                   {path.name}
@@ -92,6 +98,22 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
             );
           })}
         </div>
+      </div>
+      <div className="ml-auto w-max flex flex-row items-center justify-start gap-[20px]">
+        {["all", "trash", "star"].map((item, index) => (
+          <span
+            key={index}
+            onClick={() => {
+              setActiveTab((prev) => (prev = item));
+              getFiles(item);
+            }}
+            className={`${
+              activeTab === item ? "underline" : "hover:underline"
+            } capitalize p-1 font-bold cursor-pointer`}
+          >
+            {item}
+          </span>
+        ))}
       </div>
       <DashboardMain
         files={files}
