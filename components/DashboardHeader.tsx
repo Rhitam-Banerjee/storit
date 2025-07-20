@@ -93,7 +93,7 @@ export default function DashboardHeader({
         handleUpload={handleUpload}
       />
       <Dialog
-        open={dialogOpen}
+        defaultOpen={dialogOpen}
         onOpenChange={() => {
           setDialogOpen(true);
           setNewFolderName("");
@@ -118,7 +118,6 @@ export default function DashboardHeader({
               </Button>
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter></DialogFooter>
         </DialogContent>
       </Dialog>
     </section>

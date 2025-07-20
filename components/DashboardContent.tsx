@@ -107,7 +107,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
           })}
         </div>
       </div>
-      <div className="mt-[20px] w-full flex flex-row items-center justify-between max-md:flex-col max-md:justify-center max-md:items-start gap-[20px]">
+      <div className="mt-[20px] w-full flex flex-row items-center justify-between max-sm:flex-col max-md:justify-center max-md:items-start gap-[20px]">
         <div className="mr-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
           <span className="font-bold text-[12px]">Tabs :</span>
           {DashboardTabs.map((item, index) => (
@@ -135,7 +135,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
           ))}
         </div>
         <div className="ml-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
-          <span className="font-bold text-[12px]">Tabs :</span>
+          <span className="font-bold text-[12px]">Type :</span>
           {FileTypes.map((item, index) => (
             <span
               key={index}
