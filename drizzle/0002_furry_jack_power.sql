@@ -1,0 +1,1 @@
+ALTER TABLE "files" RENAME COLUMN "is_stared" TO "is_starred";

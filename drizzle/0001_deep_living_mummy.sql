@@ -1,0 +1,1 @@
+ALTER TABLE "files" RENAME COLUMN "thumb_url" TO "thumbnail_url";

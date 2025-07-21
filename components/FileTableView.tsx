@@ -33,6 +33,7 @@ import { TiStar } from "react-icons/ti";
 import { TbStarOff } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
 import { CiEdit } from "react-icons/ci";
+import { TbDownload } from "react-icons/tb";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
@@ -125,6 +126,14 @@ export default function TableDemo({
       setRenameValue("");
       setActiveFile(null);
     }
+  };
+  const handleDownload = async (file: DashboardTableFileContents) => {
+    const url = `/api/download/${file.id}?userId=${userId}`;
+    const response = await axios
+      .get(url)
+      .then((res) => res.data)
+      .catch((err) => toast.error("Uanble to download", { description: err }));
+    console.log(response);
   };
   const getDateTime = (typeOutput = "date", value: string) => {
     const currentDate = new Date(value);
@@ -249,7 +258,10 @@ export default function TableDemo({
                       <CiEdit className="size-5" />
                       Rename
                     </DropdownMenuItem>
-
+                    <DropdownMenuItem onClick={() => handleDownload(file)}>
+                      <TbDownload className="size-5" />
+                      Download
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleStar(file)}>
                       {file.isStared ? (
                         <>
