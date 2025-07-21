@@ -6,13 +6,11 @@ import { eq, and } from "drizzle-orm";
 import ImageKit from "imagekit";
 import { v4 as uuidv4 } from "uuid";
 
-// Initialize ImageKit with your credentials
-
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "",
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || ""
-})
+  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "",
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,7 +52,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
+    if (
+      !file.type.startsWith("image/") &&
+      !file.type.startsWith("application/")
+    ) {
       return NextResponse.json(
         { error: "Only image files are supported" },
         { status: 400 }
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
     const folderPath = parentId
       ? `/storIt/${userId}/folders/${parentId}`
       : `/storIt/${userId}`;
-      
+
     const uploadResponse = await imagekit.upload({
       file: fileBuffer,
       fileName: uniqueFilename,

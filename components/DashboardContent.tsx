@@ -59,7 +59,6 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
         }
       );
       setFiles(sortedFiles);
-      console.log(sortedFiles);
     } catch (error) {
       toast.error("Error Loading Files", {
         description: "We Couldn't load your files. Please try again.",

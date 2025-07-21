@@ -28,16 +28,18 @@ import type { DashboardTableFileContents } from "@/exportTypes";
 import { useEffect, useState } from "react";
 
 import { SlOptionsVertical } from "react-icons/sl";
-import { PiFolderSimpleFill } from "react-icons/pi";
+
 import { TiStar } from "react-icons/ti";
 import { TbStarOff } from "react-icons/tb";
 import { TbTrashX } from "react-icons/tb";
 import { CiEdit } from "react-icons/ci";
 import { TbDownload } from "react-icons/tb";
+
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { toast } from "sonner";
+import { FileType, FileTypeIcon } from "@/constants/FileTypes";
 
 interface ComponentProps {
   userId: string;
@@ -70,6 +72,9 @@ export default function TableDemo({
     if (file.type.startsWith("image/")) {
       const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-90,w-1600,fo-auto/${file.path}`;
       window.open(optimizedUrl, "_blank");
+    } else {
+      const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${file.path}`;
+      window.open(optimizedUrl, "_blank");
     }
   };
   const navigateToFolder = (folderId: string, folderName: string) => {
@@ -78,7 +83,10 @@ export default function TableDemo({
     }
   };
   const handleItemClick = (file: DashboardTableFileContents) => {
-    if (file.type.startsWith("image/")) {
+    if (
+      file.type.startsWith("image/") ||
+      file.type.startsWith("application/")
+    ) {
       openImageViewer(file);
     } else {
       navigateToFolder(file.id, file.name);
@@ -129,11 +137,10 @@ export default function TableDemo({
   };
   const handleDownload = async (file: DashboardTableFileContents) => {
     const url = `/api/download/${file.id}?userId=${userId}`;
-    const response = await axios
+    await axios
       .get(url)
       .then((res) => res.data)
       .catch((err) => toast.error("Uanble to download", { description: err }));
-    console.log(response);
   };
   const getDateTime = (typeOutput = "date", value: string) => {
     const currentDate = new Date(value);
@@ -171,6 +178,19 @@ export default function TableDemo({
       handleClickedFiles(clickedFiles.length);
     }
   };
+  const getFileType = (extension: string): string => {
+    return (
+      FileType[extension.toLowerCase() as keyof typeof FileType] || "unknown"
+    );
+  };
+  const getFileIcon = (fileTypeExtension: string): React.ElementType => {
+    const fileType: string = getFileType(fileTypeExtension);
+    return (
+      FileTypeIcon[fileType as keyof typeof FileTypeIcon] ??
+      FileTypeIcon.unknown
+    );
+  };
+
   useEffect(() => {
     setClickedFiles([]);
   }, [removedClickedFiles]);
@@ -193,97 +213,105 @@ export default function TableDemo({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {files.map((file, index) => (
-            <TableRow
-              key={index}
-              className={`cursor-pointer hover:bg-secondary text-small-text text-left ${
-                clickedFiles.indexOf(file) !== -1 ? "bg-secondary" : ""
-              }`}
-              onDoubleClick={() => handleItemClick(file)}
-            >
-              <TableCell
-                className={`${
-                  file.type === "folder" ? "h-[93px]" : ""
-                } font-medium`}
-                onClick={() => {
-                  if (clickedFiles.includes(file))
-                    setClickedFiles(
-                      clickedFiles.filter(
-                        (clickedFile) => clickedFile.id !== file.id
-                      )
-                    );
-                  else setClickedFiles([...clickedFiles, file]);
-                  checkClickedFiles();
-                }}
+          {files.map((file, index) => {
+            const Icon = getFileIcon(file.type);
+            return (
+              <TableRow
+                key={index}
+                className={`cursor-pointer hover:bg-secondary text-small-text text-left h-[93px] ${
+                  clickedFiles.indexOf(file) !== -1 ? "bg-secondary" : ""
+                }`}
+                onDoubleClick={() => handleItemClick(file)}
               >
-                {file.type === "folder" ? (
-                  <PiFolderSimpleFill className="w-[60px] h-[60px]" />
-                ) : (
-                  <Image
-                    src={file.thumbnailUrl}
-                    alt={file.name}
-                    width={100}
-                    height={100}
-                  />
-                )}
-              </TableCell>
-              <TableCell
-                className={`font-bold ${file.isStared ? "text-chart-3" : ""}`}
-              >
-                {file.name}
-              </TableCell>
-              <TableCell className="font-medium">{file.type}</TableCell>
-              <TableCell className="font-medium">
-                {!file.isFolder && getTotalsize("single", file.size)}
-              </TableCell>
-              <TableCell className="text-right">
-                {getDateTime("date", file.createdAt)}
-              </TableCell>
-              <TableCell className="text-right">
-                {getDateTime("time", file.createdAt)}
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="p-2 hover:shadow-sm shadow-primary/30 rounded-md">
-                    <SlOptionsVertical />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setActiveFile(file);
-                        setRenameValue(file.name);
-                        setOpenDialog(true);
-                      }}
-                    >
-                      <CiEdit className="size-5" />
-                      Rename
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDownload(file)}>
-                      <TbDownload className="size-5" />
-                      Download
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleStar(file)}>
-                      {file.isStared ? (
-                        <>
-                          <TbStarOff className="size-5" />
-                          <span>Un-Star</span>
-                        </>
-                      ) : (
-                        <>
-                          <TiStar className="size-5" />
-                          <span>Star</span>
-                        </>
-                      )}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleTrash(file)}>
-                      <TbTrashX className="size-5" />
-                      Trash
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell
+                  className={`${
+                    file.type === "folder" ? "h-[93px]" : ""
+                  } font-medium`}
+                  onClick={() => {
+                    if (clickedFiles.includes(file))
+                      setClickedFiles(
+                        clickedFiles.filter(
+                          (clickedFile) => clickedFile.id !== file.id
+                        )
+                      );
+                    else setClickedFiles([...clickedFiles, file]);
+                    checkClickedFiles();
+                  }}
+                >
+                  {!file.type.startsWith("image/") ? (
+                    <Icon className="w-[30px] h-[30px] mx-auto" />
+                  ) : (
+                    <Image
+                      src={file.thumbnailUrl}
+                      alt={file.name}
+                      width={100}
+                      height={100}
+                      className="mx-auto"
+                    />
+                  )}
+                </TableCell>
+                <TableCell
+                  className={`font-bold ${file.isStared ? "text-chart-3" : ""}`}
+                >
+                  {file.name}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {file.type.startsWith("image/")
+                    ? "image"
+                    : getFileType(file.type)}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {!file.isFolder && getTotalsize("single", file.size)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {getDateTime("date", file.createdAt)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {getDateTime("time", file.createdAt)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="p-2 hover:shadow-sm shadow-primary/30 rounded-md">
+                      <SlOptionsVertical />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setActiveFile(file);
+                          setRenameValue(file.name);
+                          setOpenDialog(true);
+                        }}
+                      >
+                        <CiEdit className="size-5" />
+                        Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDownload(file)}>
+                        <TbDownload className="size-5" />
+                        Download
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleStar(file)}>
+                        {file.isStared ? (
+                          <>
+                            <TbStarOff className="size-5" />
+                            <span>Un-Star</span>
+                          </>
+                        ) : (
+                          <>
+                            <TiStar className="size-5" />
+                            <span>Star</span>
+                          </>
+                        )}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleTrash(file)}>
+                        <TbTrashX className="size-5" />
+                        Trash
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
         <TableFooter className="h-[60px] bg-secondary">
           <TableRow className="font-bold">
