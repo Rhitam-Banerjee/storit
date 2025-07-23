@@ -16,11 +16,15 @@ interface FolderPathContent {
 }
 interface DashboardContentProps {
   userId: string;
+  page: string;
 }
 
-export default function DashboardContent({ userId }: DashboardContentProps) {
+export default function DashboardContent({
+  userId,
+  page,
+}: DashboardContentProps) {
   const [pathClicked, setPathClicked] = useState(false);
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState(page);
   const [activeFileType, setActiveFileType] = useState("all");
   const [folderPath, setFolderPath] = useState<FolderPathContent[]>([
     { id: null, name: "Home" },
@@ -48,7 +52,7 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     }
   };
   const getFiles = async (fileSection: string, fileType: string) => {
-    let url = `/api/files?userId=${userId}&fileSection=${fileSection}&fileType=${fileType}`;
+    let url = `/api/files?userId=${userId}&fileSection=${fileSection}&fileType=${fileType}&page=${page}`;
     if (currentFolder) url += `&parentId=${currentFolder}`;
 
     try {
@@ -72,18 +76,31 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
     getFiles(activeTab, activeFileType);
   };
   useEffect(() => {
-    getFiles("all", "all");
-    setActiveTab("all");
+    if (folderPath[folderPath.length - 1].name === "Home") {
+      getFiles(page, "all");
+      setActiveTab(page);
+    } else {
+      getFiles("all", "all");
+      setActiveTab("all");
+    }
     setActiveFileType("all");
   }, [userId, currentFolder]);
 
   return (
     <div className="flex flex-col justify-between items-center w-full gap-[15px]">
-      <DashboardHeader
-        userId={userId}
-        currentFolder={currentFolder}
-        handleUpload={handleUpload}
-      />
+      {page === "all" && (
+        <DashboardHeader
+          userId={userId}
+          currentFolder={currentFolder}
+          handleUpload={handleUpload}
+        />
+      )}
+      {page === "star" && (
+        <h1 className="text-heading3 font-bold">Viewing Starred</h1>
+      )}
+      {page === "trash" && (
+        <h1 className="text-heading3 font-bold">Viewing Trash</h1>
+      )}
 
       <div className="w-full flex flex-row items-center text-small-text">
         <span className="font-bold mr-[20px]">Path :</span>
@@ -103,7 +120,11 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
                   className="font-semibold text-small-text cursor-pointer hover:underline"
                   onClick={() => navigateToPathFolder(index)}
                 >
-                  {path.name}
+                  {path.name === "Home" && page !== "all"
+                    ? page === "star"
+                      ? "Star"
+                      : "Trash"
+                    : path.name}
                 </span>
               </div>
             );
@@ -111,32 +132,36 @@ export default function DashboardContent({ userId }: DashboardContentProps) {
         </div>
       </div>
       <div className="mt-[20px] w-full flex flex-row items-center justify-between max-sm:flex-col max-md:justify-center max-md:items-start gap-[20px]">
-        <div className="mr-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
-          <span className="font-bold text-[12px]">Tabs :</span>
-          {DashboardTabs.map((item, index) => (
-            <span
-              key={index}
-              onClick={() => {
-                setActiveTab((prev) => (prev = item.name));
-                getFiles(item.name, activeFileType);
-              }}
-              className="h-full flex flex-row items-center justify-start gap-[5px] transition-all"
-            >
-              <item.icon
-                name="icon"
-                title={item.name}
-                className={`${
-                  activeTab === item.name ? "size-5" : ""
-                } cursor-pointer transition-all`}
-              />
-              {activeTab === item.name && (
-                <span className="capitalize text-[12px] font-semibold mt-[2px]">
-                  {item.name}
-                </span>
-              )}
-            </span>
-          ))}
-        </div>
+        {(page === "all" ||
+          (page !== "all" &&
+            folderPath[folderPath.length - 1].name !== "Home")) && (
+          <div className="mr-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
+            <span className="font-bold text-[12px]">Tabs :</span>
+            {DashboardTabs.map((item, index) => (
+              <span
+                key={index}
+                onClick={() => {
+                  setActiveTab((prev) => (prev = item.name));
+                  getFiles(item.name, activeFileType);
+                }}
+                className="h-full flex flex-row items-center justify-start gap-[5px] transition-all"
+              >
+                <item.icon
+                  name="icon"
+                  title={item.name}
+                  className={`${
+                    activeTab === item.name ? "size-5" : ""
+                  } cursor-pointer transition-all`}
+                />
+                {activeTab === item.name && (
+                  <span className="capitalize text-[12px] font-semibold mt-[2px]">
+                    {item.name}
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="ml-auto max-md:ml-0 w-max flex flex-row items-center justify-start gap-[10px] bg-secondary py-1 px-3 rounded-md">
           <span className="font-bold text-[12px]">Type :</span>
           {FileTypes.map((item, index) => (

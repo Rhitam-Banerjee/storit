@@ -31,7 +31,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 
 import { TiStar } from "react-icons/ti";
 import { TbStarOff } from "react-icons/tb";
-import { TbTrashX } from "react-icons/tb";
+import { TbTrashX, TbRestore } from "react-icons/tb";
 import { CiEdit } from "react-icons/ci";
 import { TbDownload } from "react-icons/tb";
 
@@ -303,8 +303,17 @@ export default function TableDemo({
                         )}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleTrash(file)}>
-                        <TbTrashX className="size-5" />
-                        Trash
+                        {file.isTrash ? (
+                          <>
+                            <TbRestore className="size-5" />
+                            <span>Restore</span>
+                          </>
+                        ) : (
+                          <>
+                            <TbTrashX className="size-5" />
+                            <span>Star</span>
+                          </>
+                        )}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
