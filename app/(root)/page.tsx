@@ -8,10 +8,25 @@ export default function Home() {
     <main className="max-w-[1440px] m-auto px-16 py-3 max-sm:px-8 max-sm:py-4 pt-[100px] relative">
       <div className="flex flex-row max-lg:flex-col justify-center items-center">
         <div className="flex flex-col justify-center lg:items-start items-center lg:text-start text-center">
-          <h3 className="text-heading4 text-chart-3 font-bold">Store &amp; Share</h3>
-          <h1 className="text-heading1 font-black leading-[80px]">Amaizingly Simple</h1>
-          <p className="mt-[10px] max-w-[500px] text-small-text">We have designed StorIt to be easy to use, quick to access &amp; better authentication.</p>
-          <Link href="/sign-up" ><Button className="mt-[30px] px-8 py-6 max-sm:px-4 max-sm:py-3 font-bold text-secondary dark:text-primary bg-chart-3 hover:bg-chart-3/80 rounded-3xl" type="button" variant="default">Try Demo</Button></Link>
+          <h3 className="text-heading4 text-chart-3 font-bold">
+            Store &amp; Share
+          </h3>
+          <h1 className="text-heading1 font-black leading-[80px]">
+            Amaizingly Simple
+          </h1>
+          <p className="mt-[10px] max-w-[500px] text-small-text">
+            We have designed StorIt to be easy to use, quick to access &amp;
+            better authentication.
+          </p>
+          <Link href="/sign-up">
+            <Button
+              className="mt-[30px] px-8 py-6 max-sm:px-4 max-sm:py-3 font-bold text-secondary dark:text-primary bg-chart-3 hover:bg-chart-3/80 rounded-3xl"
+              type="button"
+              variant="default"
+            >
+              Try Demo
+            </Button>
+          </Link>
         </div>
         <div className="max-lg:mt-[50px]">
           <Image
@@ -24,7 +39,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="mt-[100px] mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 sticky top-[20px] w-full max-w-[400px] h-max bg-secondary rounded-4xl">
+      <div className="mt-[100px] mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 !sticky top-[20px] w-full max-w-[400px] h-max bg-secondary rounded-4xl">
         <SecondaryNav />
       </div>
       <div className="w-full h-[300dvh]"></div>

@@ -7,7 +7,7 @@ export default function UserLayout({
   return (
     <main>
       <Navbar />
-      <section className="overflow-hidden">{children}</section>
+      <section className="">{children}</section>
     </main>
   );
 }

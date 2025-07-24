@@ -22,9 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${montserrat.className} antialiased overflow-x-hidden`}
-        >
+        <body className={`${montserrat.className}`}>
           <Providers>{children}</Providers>
           <Toaster closeButton />
         </body>
