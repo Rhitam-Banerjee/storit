@@ -5,7 +5,6 @@ import FileTableView from "@/components/FileTableView";
 import type { DashboardTableFileContents } from "@/exportTypes";
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { TiStar } from "react-icons/ti";
 import { TbTrashX } from "react-icons/tb";
 interface FileUploadChanges {
   userId: string;
@@ -53,7 +52,7 @@ export default function DashboardMain({
           </div>
         </div>
       ) : (
-        <div className="w-full h-[54.5px]"></div>
+        <div className="w-full h-[52px]"></div>
       )}
       <FileTableView
         userId={userId}

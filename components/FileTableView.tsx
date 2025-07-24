@@ -311,7 +311,7 @@ export default function TableDemo({
                         ) : (
                           <>
                             <TbTrashX className="size-5" />
-                            <span>Star</span>
+                            <span>Trash</span>
                           </>
                         )}
                       </DropdownMenuItem>

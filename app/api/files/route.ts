@@ -35,33 +35,25 @@ export async function GET(req: NextRequest) {
       );
     }
     const filters = [eq(files.userId, userId)];
-    if (parentId) {
-      filters.push(eq(files.parentId, parentId));
-    } else if (page === "all") {
-      filters.push(isNull(files.parentId));
-    }
-    if (fileType === "images") {
-      filters.push(like(files.type, "image/%"));
-    } else if (fileType === "folders") {
-      filters.push(eq(files.type, "folder"));
-    } else if (fileType === "docs") {
+
+    if (parentId) filters.push(eq(files.parentId, parentId));
+    else if (page === "all") filters.push(isNull(files.parentId));
+
+    if (fileType === "images") filters.push(like(files.type, "image/%"));
+    else if (fileType === "folders") filters.push(eq(files.type, "folder"));
+    else if (fileType === "docs")
       filters.push(
         not(ilike(files.type, "image/%")),
         not(ilike(files.type, "folder"))
       );
-    }
-    if (page === "trash") {
-      filters.push(eq(files.isTrash, true));
-    } else if (page === "star" && parentId === null) {
+
+    if (page === "trash") filters.push(eq(files.isTrash, true));
+    else if (page === "star" && parentId === null)
       filters.push(eq(files.isStared, true));
-    } else {
-      if (fileSection === "trash") {
-        filters.push(eq(files.isTrash, true));
-      } else if (fileSection === "star") {
-        filters.push(eq(files.isStared, true));
-      } else {
-        filters.push(eq(files.isTrash, false));
-      }
+    else {
+      if (fileSection === "trash") filters.push(eq(files.isTrash, true));
+      else if (fileSection === "star") filters.push(eq(files.isStared, true));
+      else filters.push(eq(files.isTrash, false));
     }
     const userFiles = await db
       .select()
