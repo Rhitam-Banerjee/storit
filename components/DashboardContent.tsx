@@ -44,16 +44,17 @@ export default function DashboardContent({
     []
   );
   const navigateToPathFolder = (index: number) => {
-    setPathClicked(!pathClicked);
+    setPathClicked((prev) => !pathClicked);
     if (index < 0) {
-      setCurrentFolder(null);
-      setFolderPath([{ id: null, name: "Home" }]);
+      setCurrentFolder((prev) => null);
+      setFolderPath((prev) => [{ id: null, name: "Home" }]);
     } else {
       const newPath = folderPath.slice(0, index + 1);
-      setFolderPath(newPath);
+      setFolderPath((prev) => newPath);
       const newFolderId = newPath[newPath.length - 1].id;
-      setCurrentFolder(newFolderId);
+      setCurrentFolder((prev) => newFolderId);
     }
+    getFiles("all", "all");
   };
   const getFiles = async (fileSection: string, fileType: string) => {
     let url = `/api/files?userId=${userId}&fileSection=${fileSection}&fileType=${fileType}&page=${page}`;
@@ -84,10 +85,11 @@ export default function DashboardContent({
       );
     if (response && response.status) {
       setFiles(response.userFiles);
-      setFolderPath([{ id: null, name: "Home" }]);
       setSearchName("");
       setSearchClicked(false);
-      setSearchCurrent(true);
+      setFolderPath([{ id: null, name: "Home" }]);
+      if (!searchCurrent) {
+      }
     }
   };
   const handleUpload = () => {
@@ -120,9 +122,14 @@ export default function DashboardContent({
         <h1 className="text-heading3 font-bold">Viewing Starred</h1>
       )}
       {page === "trash" && (
-        <h1 className="text-heading3 font-bold">Viewing Trash</h1>
+        <div className="w-full flex flex-row justify-between items-center gap-[20px]">
+          <h1 className="text-heading3 font-bold">Viewing Trash</h1>
+          <Button variant="secondary" className="max-sm:scale-75">
+            Empty trash
+          </Button>
+        </div>
       )}
-      <div className="w-full flex flex-col justify-center items-start">
+      <div className="w-full flex flex-col justify-center items-start gap-[20px]">
         <div className="w-full flex-1 flex flex-wrap flex-row items-center text-small-text">
           <span className="font-bold mr-[20px]">Path :</span>
           <div className="w-max flex flex-row items-center justify-start p-2 rounded-md shadow-xs shadow-primary/10 overflow-x-auto">
@@ -170,15 +177,33 @@ export default function DashboardContent({
             })}
           </div>
         </div>
-        <div className="w-max ml-auto flex flex-row items-center justify-start gap-[10px]">
+        <div className="w-max ml-auto flex flex-row items-center justify-start max-xs:flex-col max-xs:items-start max-xs:justify-center gap-[10px]">
           {searchClicked ? (
             <>
-              <Input
-                className="bg-secondary text-[12px]"
-                placeholder="Search files or folder"
-                value={searchName}
-                onChange={({ target: { value } }) => setSearchName(value)}
-              />
+              <div className="flex flex-row items-center justify-start gap-[5px]">
+                <Input
+                  className="bg-secondary text-[12px]"
+                  placeholder="Search files or folder"
+                  value={searchName}
+                  onChange={({ target: { value } }) => setSearchName(value)}
+                />
+                <div className="xs:hidden flex flex-row items-center justify-start">
+                  <Button
+                    variant="secondary"
+                    onClick={() => search()}
+                    className=" text-[12px]"
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => setSearchClicked(false)}
+                  >
+                    <IoCloseCircle />
+                  </Button>
+                </div>
+              </div>
               <Button
                 variant="outline"
                 className="text-[12px]"
@@ -186,20 +211,22 @@ export default function DashboardContent({
               >
                 {searchCurrent ? "This folder" : "All Folder"}
               </Button>
-              <Button
-                variant="secondary"
-                onClick={() => search()}
-                className=" text-[12px]"
-              >
-                Search
-              </Button>
-              <Button
-                variant="ghost"
-                className="cursor-pointer"
-                onClick={() => setSearchClicked(false)}
-              >
-                <IoCloseCircle />
-              </Button>
+              <div className="max-xs:hidden flex flex-row items-center justify-start">
+                <Button
+                  variant="secondary"
+                  onClick={() => search()}
+                  className=" text-[12px]"
+                >
+                  Search
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="cursor-pointer"
+                  onClick={() => setSearchClicked(false)}
+                >
+                  <IoCloseCircle />
+                </Button>
+              </div>
             </>
           ) : (
             <>
