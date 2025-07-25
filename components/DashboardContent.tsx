@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardTabs, FileTypes } from "@/constants/dashboardTabs";
 import { Input } from "./ui/input";
 import { IoCloseCircle, IoSearchOutline } from "react-icons/io5";
+import { error } from "console";
 interface FolderPathContent {
   id: string | null;
   name: string | null;
@@ -80,9 +81,7 @@ export default function DashboardContent({
     const response = await axios
       .get(url)
       .then((res) => res.data)
-      .catch((err) =>
-        toast.error("Error searching name", { description: err })
-      );
+      .catch((err) => toast.error("Error searching name"));
     if (response && response.status) {
       setFiles(response.userFiles);
       setSearchName("");
@@ -97,6 +96,22 @@ export default function DashboardContent({
   };
   const reloadFiles = () => {
     getFiles(activeTab, activeFileType);
+  };
+  const emptyTrash = async () => {
+    const url = `/api/empty-trash`;
+    try {
+      const response = await axios
+        .delete(url)
+        .then((res) => res.data)
+        .catch((err) => toast.error("Error Deleting files"));
+      if (response && response.success) {
+        setCurrentFolder(null);
+        setFolderPath([{ id: null, name: "Home" }]);
+        getFiles("all", "all");
+      }
+    } catch (error) {
+      toast.error("Couldn't empty trash");
+    }
   };
   useEffect(() => {
     if (folderPath[folderPath.length - 1].name === "Home") {
@@ -124,7 +139,11 @@ export default function DashboardContent({
       {page === "trash" && (
         <div className="w-full flex flex-row justify-between items-center gap-[20px]">
           <h1 className="text-heading3 font-bold">Viewing Trash</h1>
-          <Button variant="secondary" className="max-sm:scale-75">
+          <Button
+            variant="secondary"
+            className="max-sm:scale-75"
+            onClick={() => emptyTrash()}
+          >
             Empty trash
           </Button>
         </div>
@@ -309,9 +328,12 @@ export default function DashboardContent({
           handleFolderClick={handleFolderChange}
         />
       ) : (
-        <h1 className="bg-secondary/50 w-full text-center p-2 rounded-md text-small-text">
-          Nothing Stored here
-        </h1>
+        <span
+          className="bg-secondary/50 w-full text-center p-2 rounded-md text-small-text"
+          suppressHydrationWarning
+        >
+          {page.toUpperCase()} items are displayed here
+        </span>
       )}
     </div>
   );

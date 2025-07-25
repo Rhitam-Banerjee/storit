@@ -17,60 +17,61 @@ export async function DELETE() {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const isTrashFiles = await db.select().from(files).where(
-      and(
-        eq(files.userId, userId),
-        eq(files.isTrash, true)
-      )
-    )
+    const isTrashFiles = await db
+      .select()
+      .from(files)
+      .where(and(eq(files.userId, userId), eq(files.isTrash, true)));
     if (isTrashFiles.length === 0) {
-      return NextResponse.json({
-        error: "Trash is Empty"
-      }, {
-        status: 404
-      })
+      return NextResponse.json(
+        {
+          error: "Trash is Empty",
+        },
+        {
+          status: 404,
+        }
+      );
     }
-    const deletedFiles = isTrashFiles.filter(files => !files.isFolder).map(async file => {
+    const deletedFiles = isTrashFiles
+      .filter((files) => !files.isFolder)
+      .map(async (file) => {
+        let imagekitFileId = null;
 
-      let imagekitFileId = null;
+        if (file.fileUrl) {
+          const urlWithoutQuery = file.fileUrl.split("?")[0];
+          imagekitFileId = urlWithoutQuery.split("/").pop();
+        }
 
-      if (file.fileUrl) {
-        const urlWithoutQuery = file.fileUrl.split("?")[0];
-        imagekitFileId = urlWithoutQuery.split("/").pop();
-      }
+        if (!imagekitFileId && file.path) {
+          imagekitFileId = file.path.split("/").pop();
+        }
 
-      if (!imagekitFileId && file.path) {
-        imagekitFileId = file.path.split("/").pop();
-      }
+        if (imagekitFileId) {
+          try {
+            const searchResults = await imagekit.listFiles({
+              name: imagekitFileId,
+              limit: 1,
+            });
 
-      if (imagekitFileId) {
-        try {
-          const searchResults = await imagekit.listFiles({
-            name: imagekitFileId,
-            limit: 1,
-          });
-
-          if (searchResults && searchResults.length > 0) {
-            const file = searchResults[0];
-            if ("fileId" in file) {
-              await imagekit.deleteFile(file.fileId);
+            if (searchResults && searchResults.length > 0) {
+              const file = searchResults[0];
+              if ("fileId" in file) {
+                await imagekit.deleteFile(file.fileId);
+              }
+              // await imagekit.deleteFile(searchResults[0].fileId);
+            } else {
+              await imagekit.deleteFile(imagekitFileId);
             }
-            // await imagekit.deleteFile(searchResults[0].fileId);
-          } else {
+          } catch (searchError) {
+            console.error(`Error searching for file in ImageKit:`, searchError);
             await imagekit.deleteFile(imagekitFileId);
           }
-        } catch (searchError) {
-          console.error(`Error searching for file in ImageKit:`, searchError);
-          await imagekit.deleteFile(imagekitFileId);
         }
-      }
-
-    })
-    await Promise.allSettled(deletedFiles)
-    const totalDeletedFiles = await db.delete(files).where(and(
-      eq(files.userId, userId),
-      eq(files.isTrash, true)
-    )).returning()
+      });
+    await Promise.allSettled(deletedFiles);
+    const totalDeletedFiles = await db
+      .delete(files)
+      .where(and(eq(files.userId, userId), eq(files.isTrash, true)))
+      .returning();
     return NextResponse.json({
       success: true,
       message: `Successfully deleted ${totalDeletedFiles.length} files from trash`,

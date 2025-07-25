@@ -101,9 +101,7 @@ export default function TableDemo({
     const response = await axios
       .post(url)
       .then((res) => res.data)
-      .catch((err) =>
-        toast.error("Unable to move the file to trash", { description: err })
-      );
+      .catch((err) => toast.error("Unable to move the file to trash"));
     if (response && response.success && reloadFiles) {
       reloadFiles();
     }
@@ -113,9 +111,7 @@ export default function TableDemo({
     const response = await axios
       .post(url)
       .then((res) => res.data)
-      .catch((err) =>
-        toast.error("Unable to star the file", { description: err })
-      );
+      .catch((err) => toast.error("Unable to star the file"));
     if (response && response.success && reloadFiles) {
       reloadFiles();
     }
@@ -125,9 +121,7 @@ export default function TableDemo({
     const response = await axios
       .post(url)
       .then((res) => res.data)
-      .catch((err) =>
-        toast.error("Unable to change the name", { description: err })
-      );
+      .catch((err) => toast.error("Unable to change the name"));
     if (response && response.success && reloadFiles) {
       reloadFiles();
       setOpenDialog(false);
@@ -140,7 +134,7 @@ export default function TableDemo({
     await axios
       .get(url)
       .then((res) => res.data)
-      .catch((err) => toast.error("Uanble to download", { description: err }));
+      .catch((err) => toast.error("Uanble to download"));
   };
   const getDateTime = (typeOutput = "date", value: string) => {
     const currentDate = new Date(value);
