@@ -48,7 +48,7 @@ export async function POST(
     }
     await db
       .update(files)
-      .set({ isTrash: !file.isTrash })
+      .set({ isTrash: !file.isTrash, isStared: false })
       .where(and(eq(files.id, fileId), eq(files.userId, userId)));
     return NextResponse.json({
       success: true,

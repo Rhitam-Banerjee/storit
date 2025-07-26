@@ -41,6 +41,7 @@ import { Button } from "./ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { FileType, FileTypeIcon } from "@/constants/FileTypes";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ComponentProps {
   userId: string;
@@ -64,18 +65,23 @@ export default function TableDemo({
   const [clickedFiles, setClickedFiles] = useState<
     DashboardTableFileContents[]
   >([]);
+  const route = useRouter();
   const [openDialog, setOpenDialog] = useState(false);
   const [activeFile, setActiveFile] =
     useState<DashboardTableFileContents | null>(null);
   const [renameValue, setRenameValue] = useState("");
-
-  const openImageViewer = (file: DashboardTableFileContents) => {
+  const pathName = usePathname();
+  const openViewer = (file: DashboardTableFileContents) => {
     if (file.type.startsWith("image/")) {
       const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-90,w-1600,fo-auto/${file.path}`;
       window.open(optimizedUrl, "_blank");
     } else {
-      const optimizedUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/${file.path}`;
-      window.open(optimizedUrl, "_blank");
+      const viewerUrl = `/viewFile?url=${encodeURIComponent(
+        file.fileUrl
+      )}&type=${encodeURIComponent(file.type)}&name=${encodeURIComponent(
+        file.name
+      )}`;
+      window.open(viewerUrl, "_blank");
     }
   };
   const navigateToFolder = (folderId: string, folderName: string) => {
@@ -88,7 +94,7 @@ export default function TableDemo({
       file.type.startsWith("image/") ||
       file.type.startsWith("application/")
     ) {
-      openImageViewer(file);
+      openViewer(file);
     } else {
       navigateToFolder(file.id, file.name);
     }
@@ -131,11 +137,72 @@ export default function TableDemo({
     }
   };
   const handleDownload = async (file: DashboardTableFileContents) => {
-    const url = `/api/download/${file.id}?userId=${userId}`;
-    await axios
-      .get(url)
+    toast.info("Preparing Download", {
+      description: `Getting "${file.name}" ready for download...`,
+    });
+    try {
+      if (file.type.startsWith("image/")) {
+        const downloadUrl = `${process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}/tr:q-100,orig-true/${file.path}`;
+
+        const response = await fetch(downloadUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to download image: ${response.statusText}`);
+        }
+        const blob = await response.blob();
+
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = file.name;
+        document.body.appendChild(link);
+
+        toast.success("Download Ready", {
+          description: `"${file.name}" is ready to download.`,
+        });
+
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      } else if (file.type.startsWith("application/")) {
+        const response = await axios
+          .get(file.fileUrl, {
+            responseType: "blob",
+          })
+          .then((res) => {
+            const blobUrl = URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = file.name;
+            document.body.appendChild(link);
+            toast.success("Download Ready", {
+              description: `"${file.name}" is ready to download.`,
+            });
+
+            link.click();
+
+            document.body.removeChild(link);
+            URL.revokeObjectURL(blobUrl);
+          })
+          .catch((err) => {
+            throw new Error(`Failed to download file`);
+          });
+      }
+    } catch (error) {
+      toast.error("Download Failed", {
+        description: "We couldn't download the file. Please try again later.",
+      });
+    }
+  };
+  const handleDeleteFile = async (file: DashboardTableFileContents) => {
+    const url = `/api/files/${file.id}/delete`;
+    const response = await axios
+      .delete(url)
       .then((res) => res.data)
-      .catch((err) => toast.error("Uanble to download"));
+      .catch((err) => toast.error("Unable to delete"));
+    if (response) {
+      reloadFiles();
+    }
   };
   const getDateTime = (typeOutput = "date", value: string) => {
     const currentDate = new Date(value);
@@ -280,10 +347,12 @@ export default function TableDemo({
                         <CiEdit className="size-5" />
                         Rename
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDownload(file)}>
-                        <TbDownload className="size-5" />
-                        Download
-                      </DropdownMenuItem>
+                      {!file.isFolder && (
+                        <DropdownMenuItem onClick={() => handleDownload(file)}>
+                          <TbDownload className="size-5" />
+                          Download
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem onClick={() => handleStar(file)}>
                         {file.isStared ? (
                           <>
@@ -310,6 +379,14 @@ export default function TableDemo({
                           </>
                         )}
                       </DropdownMenuItem>
+                      {file.isTrash && pathName === "/dashboard/trash" && (
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteFile(file)}
+                        >
+                          <TbTrashX className="size-5" />
+                          <span>Delete</span>
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

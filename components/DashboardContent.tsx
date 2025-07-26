@@ -196,7 +196,7 @@ export default function DashboardContent({
             })}
           </div>
         </div>
-        <div className="w-max ml-auto flex flex-row items-center justify-start max-xs:flex-col max-xs:items-start max-xs:justify-center gap-[10px]">
+        <div className="w-max ml-auto flex flex-row items-center justify-start max-xs:flex-col max-xs:items-start max-xs:justify-center gap-[5px]">
           {searchClicked ? (
             <>
               <div className="flex flex-row items-center justify-start gap-[5px]">
@@ -206,7 +206,7 @@ export default function DashboardContent({
                   value={searchName}
                   onChange={({ target: { value } }) => setSearchName(value)}
                 />
-                <div className="xs:hidden flex flex-row items-center justify-start">
+                <div className="xs:hidden flex flex-row items-center justify-start gap-[5px]">
                   <Button
                     variant="secondary"
                     onClick={() => search()}
@@ -230,7 +230,7 @@ export default function DashboardContent({
               >
                 {searchCurrent ? "This folder" : "All Folder"}
               </Button>
-              <div className="max-xs:hidden flex flex-row items-center justify-start">
+              <div className="max-xs:hidden flex flex-row items-center justify-start gap-[5px]">
                 <Button
                   variant="secondary"
                   onClick={() => search()}
