@@ -88,7 +88,7 @@ npm run build
 npm start
 ```
 
-## 🔗<a name="setup">Setup with Docker</a>
+## 🔗<a name="setup-docker">Setup with Docker</a>
 
 **To run docker containers or images, download [docker](https://www.docker.com/)**
 
