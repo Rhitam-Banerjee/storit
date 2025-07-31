@@ -3,6 +3,6 @@ services:
   app:
     build: .
     env_file:
-      - .env
+      - .env.example
     ports:
       - 3000:3000
