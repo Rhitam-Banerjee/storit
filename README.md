@@ -2,6 +2,7 @@
 
 StorIt is a cloud storage for file, where you can organise files and folders based on your priority and needs.
 <br/>**Demo running on [vercel](https://storit-lac.vercel.app/)**
+<br/>**Docker Image on [hub.docker](https://hub.docker.com/r/rhitamdev/storit)**
 
 ## Table of Contents
 
