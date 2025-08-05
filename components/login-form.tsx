@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
 
 export function LoginForm({
   className,
@@ -31,6 +32,7 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { signIn, isLoaded, setActive } = useSignIn();
   const form = useForm({
     resolver: zodResolver(signInSchema),
@@ -118,16 +120,25 @@ export function LoginForm({
                       <small>Forgot your password?</small>
                     </a>
                   </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="password"
-                      type="password"
-                      className="bg-secondary"
-                      placeholder="your password"
-                      required
-                      {...field}
-                    />
-                  </FormControl>
+                  <div className="flex items-center gap-[10px]">
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        className="bg-secondary"
+                        placeholder="your password"
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <PiEyeDuotone /> : <PiEyeClosedDuotone />}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
