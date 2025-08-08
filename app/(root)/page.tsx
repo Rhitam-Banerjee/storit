@@ -1,5 +1,5 @@
 // import About from "@/components/About";
-import SecondaryNav from "@/components/SecondaryNav";
+// import SecondaryNav from "@/components/SecondaryNav";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
