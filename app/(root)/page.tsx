@@ -40,9 +40,9 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="mt-[100px] mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 !sticky top-[20px] w-full max-w-[400px] h-max bg-secondary rounded-4xl">
+      {/* <div className="mt-[100px] mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 !sticky top-[20px] w-full max-w-[400px] h-max bg-secondary rounded-4xl">
         <SecondaryNav />
-      </div>
+      </div> */}
       {/* <About /> */}
     </main>
   );
