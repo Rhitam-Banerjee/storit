@@ -32,6 +32,7 @@
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
+  --color-chart-3-dark: var(--chart-3-dark);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
@@ -67,6 +68,7 @@
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.6542 0.2488 356.46);
+  --chart-3-dark: oklch(0.4815 0.2111 356.46);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.968 0.007 247.896);
@@ -101,6 +103,7 @@
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.6542 0.2488 356.46);
+  --chart-3-dark: oklch(0.4815 0.2111 356.46);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.208 0.042 265.755);
@@ -112,44 +115,98 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-radial-[at_0%_50%] from-sidebar to-background to-75% text-foreground;
   }
 }
-@utility h1{
+
+@utility h1 {
   font-size: 80px;
 }
-@utility h2{
+
+@utility h2 {
   font-size: 50px;
 }
-@utility h3{
+
+@utility h3 {
   font-size: 35px;
 }
-@utility h4{
-  font-size:25px;
+
+@utility h4 {
+  font-size: 25px;
 }
+
 @utility small-text {
-  font-size:15px;
+  font-size: 15px;
 }
+
 @utility small-text2 {
-  font-size:12px;
+  font-size: 12px;
 }
-.text-heading1{
+
+.text-heading1 {
   @apply h1 max-lg:h2 max-xs:h3;
 }
-.text-heading2{
+
+.text-heading2 {
   @apply h2 max-lg:h3 max-xs:h4;
 }
-.text-heading3{
+
+.text-heading3 {
   @apply h3 max-lg:h4 max-xs:small-text;
 }
-.text-heading4{
+
+.text-heading4 {
   @apply h4 max-lg:small-text;
 }
-.text-small-text{
+
+.text-small-text {
   @apply small-text max-lg:small-text2;
+}
+
+.start-card-group-1,
+.start-card-group-2,
+.start-card-group-3,
+.start-card-group-4,
+.start-card-group-5,
+.start-card-group-6,
+.start-card-group-7,
+.end-card-group-1,
+.end-card-group-2,
+.end-card-group-3,
+.end-card-group-4,
+.end-card-group-5,
+.end-card-group-6,
+.end-card-group-7 {
+  @apply duration-800;
+}
+
+.active {
+  @apply bg-transparent text-white shadow-md shadow-primary/30;
+}
+
+.on-active>img {
+  @apply translate-y-[5px] transition-all duration-800 ease-in-out;
+}
+
+.on-active>span {
+  @apply opacity-0 text-[12px] text-primary font-bold translate-y-[10px] transition-all duration-800 ease-in-out;
+}
+
+.active>.on-active {
+  @apply !grayscale-0;
+}
+
+.active>.on-active>img {
+  @apply opacity-100 -translate-y-[5px];
+}
+
+.active>.on-active>span {
+  @apply opacity-100 -translate-y-[5px];
 }

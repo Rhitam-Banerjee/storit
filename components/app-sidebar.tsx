@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import { TiStar, TiUser } from "react-icons/ti";
 import { TbHome, TbTrashX } from "react-icons/tb";
 import Link from "next/link";
@@ -32,19 +32,22 @@ const items = [
     url: "/dashboard/trash",
     icon: TbTrashX,
   },
-]
+];
 export function AppSidebar() {
-  const pathname = usePathname()
-  const [activePage, setActivePage] = useState("dashboard")
+  const pathname = usePathname();
+  const [activePage, setActivePage] = useState("dashboard");
   useEffect(() => {
-    setActivePage(pathname?.split("/")?.pop() || "dashboard")
-  }, [pathname])
+    setActivePage(pathname?.split("/")?.pop() || "dashboard");
+  }, [pathname]);
   return (
-    <Sidebar>
+    <Sidebar className="z-[98]">
       <SidebarContent>
         <SidebarGroup className="px-[20px] py-[15px]">
           <SidebarGroupLabel className="mb-[20px]">
-            <Link href={"/"} className="flex flex-row justify-start items-center gap-[10px]">
+            <Link
+              href={"/"}
+              className="flex flex-row justify-start items-center gap-[10px]"
+            >
               <PiCloudArrowUpDuotone className="text-2xl" />
               <span className="text-2xl font-semibold">StorIt</span>
             </Link>
@@ -53,7 +56,14 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className={`${activePage === item.title ? "bg-primary text-secondary" : ""} hover:bg-primary hover:text-secondary`}>
+                  <SidebarMenuButton
+                    asChild
+                    className={`${
+                      activePage === item.title
+                        ? "bg-primary text-secondary"
+                        : ""
+                    } hover:bg-primary hover:text-secondary`}
+                  >
                     <a href={item.url} className="">
                       <item.icon />
                       <span className="capitalize">{item.title}</span>
@@ -63,12 +73,15 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </ SidebarGroup>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-[20px] py-[15px]">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href={"/account"} className="flex flex-row justify-start items-center gap-2">
+            <Link
+              href={"/account"}
+              className="flex flex-row justify-start items-center gap-2"
+            >
               <TiUser />
               <span>My Account</span>
             </Link>
@@ -76,5 +89,5 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

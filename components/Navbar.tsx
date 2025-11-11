@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const maxEmailLength = 30;
 
@@ -29,6 +30,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const { signOut } = useClerk();
   const { isSignedIn, user, isLoaded } = useUser();
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const loggedUser = user
     ? {
         id: user.id,
@@ -38,15 +41,40 @@ export default function Navbar() {
       }
     : null;
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="px-16 py-3 max-sm:px-8 max-sm:py-4 w-full max-w-[1440px] mx-auto h-max z-50">
-      <nav className="flex flex-row items-center justify-between">
+    <header
+      className={`fixed top-0 left-0 right-0 px-16 max-sm:px-8 w-full z-50 transition-all duration-300 ease-in-out ${
+        isScrolled
+          ? "py-3 max-sm:py-3 shadow-sm backdrop-blur-md bg-background/80"
+          : "py-8 max-sm:py-8"
+      }`}
+    >
+      <nav className="flex flex-row items-center justify-between max-w-[1440px] mx-auto">
         <Link
           href={"/"}
           className="flex flex-row justify-start items-center gap-[10px]"
         >
-          <PiCloudArrowUpDuotone className="text-2xl" />
-          <span className="text-2xl font-semibold">StorIt</span>
+          <PiCloudArrowUpDuotone
+            className={`transition-all duration-300 ease-in-out ${
+              isScrolled ? "text-xl" : "text-2xl"
+            }`}
+          />
+          <span
+            className={`font-semibold transition-all duration-300 ease-in-out ${
+              isScrolled ? "text-xl" : "text-2xl"
+            }`}
+          >
+            StorIt
+          </span>
         </Link>
         <div className="flex flex-row justify-end items-center gap-[10px]">
           <div className="flex max-xs:hidden flex-row justify-end items-center gap-[10px]">

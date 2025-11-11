@@ -1,30 +1,27 @@
 interface LinkGroup {
-  id: number,
-  name: string,
-  sectionHeading: string,
-  para: string,
-  link: string
+  id: number;
+  name: string;
+  src: string;
 }
-export const navLinks: LinkGroup[] = [
+export const videoLinks: LinkGroup[] = [
   {
     id: 1,
-    name: "About",
-    sectionHeading: "",
-    para: "",
-    link: "#about"
+    name: "Secure",
+    src: "/demo-signup.mp4",
   },
   {
     id: 2,
-    name: "Features",
-    sectionHeading: "",
-    para: "",
-    link: "#features"
+    name: "Upload",
+    src: "/demo-upload.mp4",
   },
   {
     id: 3,
-    name: "FAQ",
-    sectionHeading: "",
-    para: "",
-    link: "#faq"
-  }
-]
+    name: "Mark",
+    src: "/demo-mark.mp4",
+  },
+  {
+    id: 4,
+    name: "Edit",
+    src: "/demo-edit.mp4",
+  },
+];
