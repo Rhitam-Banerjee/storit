@@ -1,5 +1,5 @@
 "use client";
-import { navLinks } from "@/constants/navLinks";
+import { videoLinks } from "@/constants/navLinks";
 import gsap from "gsap";
 import { Flip } from "gsap/all";
 import { useRef } from "react";
@@ -30,7 +30,7 @@ export default function SecondaryNav() {
   return (
     <section className="w-full z-10">
       <div className="w-full relative flex flex-row justify-between items-center z-20">
-        {navLinks.map((link, index) => {
+        {videoLinks.map((link, index) => {
           return (
             <div
               ref={(el) => {

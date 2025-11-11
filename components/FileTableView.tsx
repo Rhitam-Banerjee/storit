@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
@@ -245,12 +246,10 @@ export default function TableDemo({
       FileType[extension.toLowerCase() as keyof typeof FileType] || "unknown"
     );
   };
-  const getFileIcon = (fileTypeExtension: string): React.ElementType => {
+  const getFileIcon = (fileTypeExtension: string): React.ComponentType<any> => {
     const fileType: string = getFileType(fileTypeExtension);
-    return (
-      FileTypeIcon[fileType as keyof typeof FileTypeIcon] ??
-      FileTypeIcon.unknown
-    );
+    return (FileTypeIcon[fileType as keyof typeof FileTypeIcon] ??
+      FileTypeIcon.unknown) as React.ComponentType<any>;
   };
 
   useEffect(() => {
