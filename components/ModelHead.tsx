@@ -21,25 +21,28 @@ type ModelProps = React.ComponentProps<"group">;
 export const Model = React.forwardRef<THREE.Group, ModelProps>((props, ref) => {
   const { nodes, materials } = useGLTF("/scene.gltf") as unknown as GLTFResult;
   return (
-    <group ref={ref} {...props} dispose={null}>
-      <group rotation={[-Math.PI / 2, 0, 0]} scale={0.717}>
+    <group ref={ref} {...props} dispose={null} name="ModelRoot">
+      <group rotation={[-Math.PI / 2, 0, 0]} scale={0.717} name="ModelGroup">
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Sphere_0.geometry}
           material={materials["Material.001"]}
+          name="Sphere_0"
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Sphere_1.geometry}
           material={materials["Material.002"]}
+          name="Sphere_1"
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Sphere_2.geometry}
           material={materials["Material.003"]}
+          name="Sphere_2"
         />
       </group>
     </group>
@@ -48,4 +51,5 @@ export const Model = React.forwardRef<THREE.Group, ModelProps>((props, ref) => {
 
 Model.displayName = "Model";
 
+// Preload model for performance
 useGLTF.preload("/scene.gltf");

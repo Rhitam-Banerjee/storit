@@ -70,6 +70,8 @@ function ModelComponent() {
     <Canvas
       className={cn(`!w-full !h-full mt-[100px]`)}
       camera={{ position: [0, 0, 20], fov: 10 }}
+      aria-label="Interactive 3D model showing the head with mouse-based rotation"
+      tabIndex={0}
     >
       <OrbitControls
         enableZoom={false}

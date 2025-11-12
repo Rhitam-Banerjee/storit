@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-// import { IconFile } from "@tabler/icons-react";
 import Image from "next/image";
-import { gridContent } from "@/constants/aboutContent";
+import { gridLayout } from "@/constants/aboutContent";
 
 export default function GridAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,98 +99,33 @@ export default function GridAnimation() {
     }
   }, []);
   return (
-    <div
+    <section
+      aria-label="StorIt features visual grid animation"
       ref={containerRef}
       className="relative grid grid-cols-6 w-max min-w-[300px] max-w-[500px] mx-auto scale-80 lg:scale-100"
       style={{ justifyItems: "center", alignItems: "center" }}
+      tabIndex={-1}
     >
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-3">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[1].icon} width={30} height={30} alt="" />
-          <span>{gridContent[1].text}</span>
-        </div>
-      </div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 start-card-group-1">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[0].icon} width={30} height={30} alt="" />
-          <span>{gridContent[0].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-1">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[2].icon} width={30} height={30} alt="" />
-          <span>{gridContent[2].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-2">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[3].icon} width={30} height={30} alt="" />
-          <span>{gridContent[3].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 start-card-group-4">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[4].icon} width={30} height={30} alt="" />
-          <span>{gridContent[4].text}</span>
-        </div>
-      </div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-1">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[5].icon} width={30} height={30} alt="" />
-          <span>{gridContent[5].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 start-card-group-5">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[6].icon} width={30} height={30} alt="" />
-          <span>{gridContent[6].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 start-card-group-2 end-card-group-4">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[7].icon} width={30} height={30} alt="" />
-          <span>{gridContent[7].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-5">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[8].icon} width={30} height={30} alt="" />
-          <span>{gridContent[8].text}</span>
-        </div>
-      </div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 start-card-group-3">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[9].icon} width={30} height={30} alt="" />
-          <span>{gridContent[9].text}</span>
-        </div>
-      </div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div className="scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 end-card-group-5">
-        <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
-          <Image src={gridContent[10].icon} width={30} height={30} alt="" />
-          <span>{gridContent[10].text}</span>
-        </div>
-      </div>
-      <div></div>
+      {gridLayout.map((item, index) => {
+        if (!item) return <div key={index} aria-hidden="true" />;
+        return (
+          <div
+            key={index}
+            className={`scale-80 text-center w-[70px] h-[70px] rounded-lg bg-transparent border-[1px] border-primary/30 ${item.className}`}
+            role="group"
+            aria-label={item.text}
+            tabIndex={0}
+          >
+            <div className="h-full w-full grayscale-100 flex flex-col justify-center items-center on-active">
+              <Image src={item.icon} width={30} height={30} alt={item.text} />
+              <span>{item.text}</span>
+            </div>
+          </div>
+        );
+      })}
 
       <svg
+        aria-hidden="true"
         className="absolute rotate-270 top-[80px] left-[98px]"
         style={{ width: "135px", height: "53px" }}
       >
@@ -218,11 +152,11 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "176.465px",
             strokeDashoffset: "176.465px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
       <svg
+        aria-hidden="true"
         className="absolute scale-x-73 top-[70px] -translate-y-1/4"
         style={{ width: "194px" }}
       >
@@ -249,11 +183,11 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "192px",
             strokeDashoffset: "192px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
       <svg
+        aria-hidden="true"
         className="absolute top-[105px] left-[56%]"
         style={{ height: "110px" }}
       >
@@ -279,12 +213,12 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "176.465px",
             strokeDashoffset: "176.465px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
 
       <svg
+        aria-hidden="true"
         className="absolute top-[69px] left-[35px]"
         style={{ width: "12px", height: "212px" }}
       >
@@ -310,12 +244,12 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "212px",
             strokeDashoffset: "212px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
 
       <svg
+        aria-hidden="true"
         className="absolute top-[calc(50%_+_35px)] left-1/4"
         style={{ width: "105px", height: "53px" }}
       >
@@ -341,12 +275,12 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "184.465px",
             strokeDashoffset: "184.465px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
 
       <svg
+        aria-hidden="true"
         className="absolute top-[calc(50%_+_35px)] right-[70px]"
         style={{ width: "35px", height: "53px" }}
       >
@@ -372,12 +306,12 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "94.4645px",
             strokeDashoffset: "94.4645px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
 
       <svg
+        aria-hidden="true"
         className="absolute top-[calc(50%_+_35px)] right-[110px] rotate-180"
         style={{ width: "4px", height: "70px" }}
       >
@@ -403,10 +337,9 @@ export default function GridAnimation() {
           style={{
             strokeDasharray: "69px",
             strokeDashoffset: "69px",
-            // strokeDashoffset: "0px",
           }}
         />
       </svg>
-    </div>
+    </section>
   );
 }

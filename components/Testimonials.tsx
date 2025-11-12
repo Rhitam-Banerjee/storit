@@ -1,18 +1,20 @@
-import Image from "next/image.js";
+import Image from "next/image";
 import { testimonials } from "../constants/testimonials";
 import clsx from "clsx";
-type testimonial = {
+
+type Testimonial = {
   id: string;
   name: string;
   role: string;
   avatarUrl: string;
   comment: string;
 };
+
 const TestimonialItem = ({
   item,
   containerClassName,
 }: {
-  item: testimonial;
+  item: Testimonial;
   containerClassName: string;
 }) => {
   return (
@@ -22,7 +24,9 @@ const TestimonialItem = ({
         containerClassName
       )}
     >
-      <blockquote className="h6 mb-8 text-[15px]">{item.comment}</blockquote>
+      <blockquote className="h6 mb-8 text-[15px]" tabIndex={-1}>
+        {item.comment}
+      </blockquote>
 
       <div className="flex items-center max-xl:-mr-8">
         <div className="mr-4 size-20 shrink-0 rounded-full">
@@ -30,7 +34,7 @@ const TestimonialItem = ({
             height={80}
             width={80}
             src={item.avatarUrl}
-            alt={item.name}
+            alt={`Avatar of ${item.name}`}
             className="size-full object-cover"
           />
         </div>
@@ -47,15 +51,24 @@ const Testimonials = () => {
   const halfLength = Math.floor(testimonials.length / 2);
 
   return (
-    <section className="mt-[50px] relative max-w-[1440px] w-full mx-auto px-16 py-3 max-sm:px-8 max-sm:py-4 mb-[100px]">
+    <section
+      aria-labelledby="testimonials-heading"
+      className="mt-[50px] relative max-w-[1440px] w-full mx-auto px-16 py-3 max-sm:px-8 max-sm:py-4 mb-[100px]"
+    >
       <div className="container block lg:flex">
         <div className="relative z-2">
           <p className="text-chart-3 text-heading3">Wall of review</p>
-          <h3 className="text-[15px] mb-[50px]">Words from our users</h3>
+          <h3
+            id="testimonials-heading"
+            className="text-[15px] mb-[50px]"
+            tabIndex={-1}
+          >
+            Words from our users
+          </h3>
         </div>
 
         <div className="relative -my-12 -mr-3 flex items-start max-lg:static max-md:block">
-          <div className="">
+          <div>
             {testimonials.slice(0, halfLength).map((testimonial) => (
               <TestimonialItem
                 key={testimonial.id}
@@ -65,7 +78,7 @@ const Testimonials = () => {
             ))}
           </div>
 
-          <div className="">
+          <div>
             {testimonials.slice(halfLength).map((testimonial) => (
               <TestimonialItem
                 key={testimonial.id}

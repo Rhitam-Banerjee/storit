@@ -1,19 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Suspense, useEffect, useRef, useState } from "react";
-// import Model from "./Model";
-import { videoLinks } from "@/constants/navLinks";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { Flip } from "gsap/all";
 import {
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
 } from "@tabler/icons-react";
-gsap.registerPlugin(Flip);
-export default function Fearutes() {
-  // const [interactive, setInteractive] = useState(false);
+import { videoLinks } from "@/constants/navLinks";
+
+export default function Features() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false); // Track play/pause state
-  const linkRef = useRef<Array<HTMLDivElement | null>>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const linkRef = useRef<(HTMLButtonElement | null)[]>([]);
   const hoverRef = useRef<HTMLSpanElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +18,6 @@ export default function Fearutes() {
     const videoEl = videoRef.current;
     if (!videoEl) return;
 
-    // Animate video scale down and fade out
     gsap.to(videoEl, {
       translateY: 50,
       opacity: 0,
@@ -32,7 +27,6 @@ export default function Fearutes() {
         setActiveIndex(index);
         setIsPlaying(false);
 
-        // Animate scale up and fade in for new video
         gsap.to(videoEl, {
           translateY: 0,
           opacity: 1,
@@ -101,6 +95,7 @@ export default function Fearutes() {
       setIsPlaying(false);
     }
   };
+
   return (
     <div className="relative mt-[100px]">
       <div
@@ -112,8 +107,9 @@ export default function Fearutes() {
           src={videoLinks[activeIndex].src}
           muted
           loop
-          className="rounded-lg rounded-b-none w-full h-full object-contain "
+          className="rounded-lg rounded-b-none w-full h-full object-contain"
           playsInline
+          aria-label={`Video showing: ${videoLinks[activeIndex].name}`}
         >
           Your browser does not support the video tag.
         </video>
@@ -121,56 +117,48 @@ export default function Fearutes() {
         {/* Custom play/pause button */}
         <button
           onClick={togglePlayPause}
+          aria-pressed={isPlaying}
           aria-label={isPlaying ? "Pause video" : "Play video"}
-          className="absolute bottom-4 right-6 p-2 rounded-full bg-secondary/10 border-[1px] text-white shadow-lg hover:bg-chart-3/80 transition"
+          className="absolute bottom-4 right-6 p-2 rounded-full bg-secondary/10 border-[1px] text-white shadow-lg hover:bg-chart-3/80 focus:outline focus:outline-offset-1 focus:outline-chart-3/20 transition"
         >
           {isPlaying ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
         </button>
       </div>
+
       <div className="absolute left-1/2 -translate-x-1/2 w-full h-[200px] bg-gradient-to-b from-chart-3/20 dark:from-chart-3-dark to-secondary/1"></div>
-      <div className="mt-5 mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 w-full max-w-[400px] h-max bg-secondary rounded-4xl shadow-lg shadow-chart-3/20">
+      <nav
+        aria-label="Video selection"
+        className="mt-5 mx-auto max-xs:px-2 max-xs:py-2 px-4 py-3 w-full max-w-[400px] h-max bg-secondary rounded-4xl shadow-lg shadow-chart-3/20"
+      >
         <div className="w-full z-10">
           <div className="w-full relative flex flex-row justify-between items-center z-20">
             {videoLinks.map((link, index) => (
-              <div
+              <button
+                key={index}
                 ref={(el) => {
                   linkRef.current[index] = el;
                 }}
                 className={`max-sm:small-text max-sm:px-[10px] px-[20px] py-[5px] cursor-pointer ${
-                  activeIndex == index
+                  activeIndex === index
                     ? "text-white"
                     : "text-chart-3-dark dark:text-white"
                 }`}
-                key={index}
                 onClick={() => handleClick(index)}
+                aria-current={activeIndex === index ? "true" : undefined}
+                aria-label={`Select video: ${link.name}`}
+                type="button"
               >
                 {link.name}
-              </div>
+              </button>
             ))}
             <span
               ref={hoverRef}
-              className={`absolute top-0 left-0 h-full bg-chart-3 rounded-3xl pointer-events-none -z-10`}
+              className="absolute top-0 left-0 h-full bg-chart-3 rounded-3xl pointer-events-none -z-10"
+              aria-hidden="true"
             />
           </div>
         </div>
-      </div>
-      {/* <div className="max-48:w-full w-1/2 flex justify-center items-center h-full">
-        <div className="relative w-full aspect-square">
-          <Suspense fallback={<div>Loading 3D model...</div>}>
-            <Model interactive={interactive} />
-          </Suspense>
-          <div
-            className={`absolute bottom-0 right-0 w-[100px] h-[30px] grid place-items-center rounded-xl cursor-pointer ${
-              interactive
-                ? "shadow-md bg-primary text-secondary"
-                : "text-primary bg-secondary"
-            }`}
-            onClick={() => setInteractive(!interactive)}
-          >
-            Interact
-          </div>
-        </div>
-      </div> */}
+      </nav>
     </div>
   );
 }

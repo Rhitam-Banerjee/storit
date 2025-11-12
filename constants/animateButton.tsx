@@ -1,7 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 
-export default function Button({ text }: { text: string }) {
+export default function Button({
+  text,
+  ariaLabel,
+}: {
+  text: string;
+  ariaLabel?: string;
+}) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const fillAnim = useRef<gsap.core.Tween | null>(null);
@@ -9,15 +15,24 @@ export default function Button({ text }: { text: string }) {
   useEffect(() => {
     const button = buttonRef.current;
     const fill = fillRef.current;
-
     if (!button || !fill) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      // Disable animation for reduced motion users
+      fill.style.opacity = "0";
+      fill.style.scale = "0";
+      return;
+    }
 
     const handleMouseEnter = (e: MouseEvent) => {
       const rect = button.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Set initial position of fill circle
       fillAnim.current?.kill();
       gsap.set(fill, {
         left: x,
@@ -26,7 +41,6 @@ export default function Button({ text }: { text: string }) {
         yPercent: -50,
       });
 
-      // Animate fill expanding from mouse position
       fillAnim.current = gsap.to(fill, {
         scale: 3,
         opacity: 1,
@@ -36,10 +50,7 @@ export default function Button({ text }: { text: string }) {
     };
 
     const handleMouseLeave = () => {
-      // Animate fill shrinking
       fillAnim.current?.kill();
-
-      // Animate fill shrinking
       fillAnim.current = gsap.to(fill, {
         scale: 0,
         opacity: 0,
@@ -59,11 +70,12 @@ export default function Button({ text }: { text: string }) {
   }, []);
 
   return (
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center">
       <button
         ref={buttonRef}
-        className="relative overflow-hidden mt-[30px] px-8 py-2 max-sm:px-4 max-sm:py-3 font-bold text-chart-3 dark:text-white hover:text-white border-2 border-chart-3 bg-transparent rounded-3xl transition-colors"
         type="button"
+        aria-label={ariaLabel || text}
+        className="relative overflow-hidden mt-[30px] px-8 py-2 max-sm:px-4 max-sm:py-3 font-bold text-chart-3 dark:text-white hover:text-white border-2 border-chart-3 bg-transparent rounded-3xl transition-colors focus:outline-1 focus:outline-offset-2 focus:outline-chart-3"
       >
         <span
           ref={fillRef}
